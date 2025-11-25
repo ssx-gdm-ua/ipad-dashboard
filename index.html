@@ -1,203 +1,260 @@
-<!-- Minimalist Dark Dashboard for Old iPad (iOS 10 Compatible) -->
+<!-- Minimalist Dark Dashboard for Old iPad (iOS 10 Compatible) - Updated -->
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <title>iPad Dashboard</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <style>
         body {
-            background:#0d0d0d;
-            color:#fff;
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-            margin:0;
-            padding:20px;
+            background:#0b0f12;
+            color:#e6eef6;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            margin:0;padding:18px;
         }
-        .section {
-            margin-bottom:25px;
-            padding:15px;
-            background:#1a1a1a;
-            border-radius:10px;
-        }
-        h2 {
-            margin-top:0;
-            font-size:20px;
-        }
-        img.chart {
-            width:100%;
-            height:auto;
-            border-radius:8px;
-            margin-top:10px;
-        }
-        .todo-item, .vit-item {
-            display:flex;
-            align-items:center;
-            margin:5px 0;
-        }
-        input[type="checkbox"] {
-            margin-right:10px;
-            width:20px;
-            height:20px;
-        }
-        input.todo-text {
-            flex:1;
-            padding:5px;
-            border-radius:6px;
-            border:none;
-            outline:none;
-            margin-left:10px;
-        }
-        button {
-            padding:8px 12px;
-            border-radius:6px;
-            border:none;
-            background:#333;
-            color:#fff;
-            margin-top:10px;
-        }
+        .wrap{max-width:900px;margin:0 auto;}
+        .section {margin-bottom:18px;padding:12px;background:#0f171a;border-radius:10px;box-shadow:0 4px 14px rgba(0,0,0,0.6)}
+        h2{margin:0 0 8px 0;font-size:18px}
+        .prices{font-size:14px;color:#9fb4c6}
+        img.chart{width:100%;height:110px;border-radius:8px;margin-top:8px;object-fit:cover}
+        .small{font-size:12px;color:#7f98a6}
+        .todo-list{margin-top:8px}
+        .todo-item{display:flex;align-items:center;margin:6px 0}
+        .todo-checkbox{width:20px;height:20px;margin-right:8px}
+        .todo-text{flex:1;padding:6px 8px;border-radius:6px;border:0;background:transparent;color:inherit;font-size:15px}
+        .todo-delete{margin-left:8px;background:#15202b;border-radius:6px;padding:6px 8px;color:#cfeefc;border:0}
+        .controls{display:flex;gap:8px;margin-top:8px}
+        button{background:#132029;color:#cfeefc;border:0;padding:8px 10px;border-radius:8px}
+        input[type=text]{padding:6px;border-radius:6px;border:0;background:#061216;color:inherit}
+        .vit-grid{display:flex;flex-direction:column;margin-top:8px}
+        .vit-item{display:flex;align-items:center;margin:6px 0}
+        .meta{font-size:12px;color:#6f8b98;margin-top:6px}
+        .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+        .time{font-size:20px;font-weight:600}
     </style>
 </head>
 <body>
+<div class="wrap">
+    <div class="topbar">
+        <div class="time" id="time">--:--</div>
+        <div class="small" id="lastUpdate">Last update: —</div>
+    </div>
 
-<!-- Crypto Prices + Charts -->
-<div class="section">
-    <h2>Crypto</h2>
-    <div id="prices">Loading...</div>
+    <!-- Crypto Prices + Charts -->
+    <div class="section">
+        <h2>Crypto</h2>
+        <div class="prices" id="prices">Loading prices...</div>
+        <div style="margin-top:10px">
+            <div style="margin-bottom:6px"><strong class="small">BTC</strong></div>
+            <img class="chart" id="btcChart" alt="BTC chart" />
+            <div style="margin-top:8px"><strong class="small">ETH</strong></div>
+            <img class="chart" id="ethChart" alt="ETH chart" />
+            <div style="margin-top:8px"><strong class="small">SOL</strong></div>
+            <img class="chart" id="solChart" alt="SOL chart" />
+        </div>
+    </div>
 
-    <h3>BTC</h3>
-    <img class="chart" id="btcChart" />
+    <!-- Quote -->
+    <div class="section">
+        <h2>Quote of the Day</h2>
+        <div id="quote" style="font-size:16px;line-height:1.4">Loading quote...</div>
+        <div class="meta">Tap quote to change. If online quote fails — local fallback used.</div>
+    </div>
 
-    <h3>ETH</h3>
-    <img class="chart" id="ethChart" />
+    <!-- Todo List -->
+    <div class="section">
+        <h2>To-Do</h2>
+        <div class="todo-list" id="todoList"></div>
+        <div class="controls">
+            <input type="text" id="newTodo" placeholder="New task" />
+            <button id="addBtn">Add</button>
+            <button id="clearDone">Clear done</button>
+        </div>
+        <div class="meta">Tip: tap text to edit; keyboard will stay (fixed).</div>
+    </div>
 
-    <h3>SOL</h3>
-    <img class="chart" id="solChart" />
-</div>
-
-<!-- Quote -->
-<div class="section">
-    <h2>Quote of the Day</h2>
-    <div id="quote">Loading quote...</div>
-</div>
-
-<!-- Todo List -->
-<div class="section">
-    <h2>To‑Do</h2>
-    <div id="todoList"></div>
-    <button onclick="addTodo()">Add task</button>
-</div>
-
-<!-- Vitamins / Pills Tracker -->
-<div class="section">
-    <h2>Vitamins</h2>
-    <div class="vit-item"><input type="checkbox" id="vitA">Vitamin A</div>
-    <div class="vit-item"><input type="checkbox" id="vitB">Vitamin B</div>
-    <div class="vit-item"><input type="checkbox" id="vitC">Vitamin C</div>
+    <!-- Vitamins / Pills Tracker -->
+    <div class="section">
+        <h2>Vitamins / Habits</h2>
+        <div class="vit-grid" id="vitGrid"></div>
+        <div class="controls" style="margin-top:8px">
+            <input type="text" id="newVit" placeholder="Add vitamin / habit" />
+            <button id="addVit">Add</button>
+        </div>
+    </div>
 </div>
 
 <script>
-// ---- Load Crypto Prices (XHR for iOS 10) ----
-function loadPrices() {
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'https://api.coinlore.net/api/tickers/?start=0&limit=10');
-    xhr.onload = function() {
-        if (xhr.status === 200) {
-            var data = JSON.parse(xhr.responseText).data;
-            var btc = findCoin(data, 'Bitcoin');
-            var eth = findCoin(data, 'Ethereum');
-            var sol = findCoin(data, 'Solana');
+/** ES5-compatible code for old iPad (iOS10) **/
 
-            document.getElementById('prices').innerHTML =
-                'BTC: $' + btc.price_usd + '<br>'+
-                'ETH: $' + eth.price_usd + '<br>'+
-                'SOL: $' + sol.price_usd;
+// --- Time ---
+function updateTime(){
+    var now = new Date();
+    var hh = now.getHours(); if(hh<10) hh='0'+hh;
+    var mm = now.getMinutes(); if(mm<10) mm='0'+mm;
+    document.getElementById('time').textContent = hh+':'+mm;
+}
+setInterval(updateTime,1000); updateTime();
+
+// --- Helpers ---
+function ls(key, val){
+    if(arguments.length===2){
+        try{ localStorage.setItem(key, JSON.stringify(val)); }catch(e){}
+    } else {
+        try{ return JSON.parse(localStorage.getItem(key)||'null'); }catch(e){return null;}
+    }
+}
+
+// --- Prices via coinlore (simple XHR) ---
+function loadPrices(){
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET','https://api.coinlore.net/api/tickers/?start=0&limit=10');
+    xhr.timeout = 7000;
+    xhr.onload = function(){
+        if(xhr.status===200){
+            try{
+                var data = JSON.parse(xhr.responseText).data;
+                var btc = findCoin(data,'Bitcoin');
+                var eth = findCoin(data,'Ethereum');
+                var sol = findCoin(data,'Solana');
+                var out = 'BTC: $'+format(btc.price_usd)+'  ▲'+btc.percent_change_24h+'%<br>'+
+                          'ETH: $'+format(eth.price_usd)+'  ▲'+eth.percent_change_24h+'%<br>'+
+                          'SOL: $'+format(sol.price_usd)+'  ▲'+sol.percent_change_24h+'%';
+                document.getElementById('prices').innerHTML = out;
+                document.getElementById('lastUpdate').textContent = 'Last update: '+(new Date()).toLocaleTimeString();
+            }catch(e){console.log(e);}    
         }
     };
+    xhr.ontimeout = function(){ console.log('prices timeout'); };
+    xhr.onerror = function(){ console.log('prices err'); };
     xhr.send();
 }
+function findCoin(list,name){ for(var i=0;i<list.length;i++){ if(list[i].name===name) return list[i]; } return {price_usd:0,percent_change_24h:0}; }
+function format(v){ var n = parseFloat(v); if(isNaN(n)) return '—'; return n.toFixed(2); }
 
-function findCoin(list, name){
-    for (var i = 0; i < list.length; i++) {
-        if (list[i].name === name) return list[i];
-    }
-    return {};    
-}
-
-// ---- Load SVG Charts ----
+// --- Charts as SVG images from CoinGecko (cache-busted) ---
 function loadCharts(){
-    document.getElementById('btcChart').src = 'https://www.coingecko.com/coins/1/sparkline.svg?'+Date.now();
-    document.getElementById('ethChart').src = 'https://www.coingecko.com/coins/279/sparkline.svg?'+Date.now();
-    document.getElementById('solChart').src = 'https://www.coingecko.com/coins/4128/sparkline.svg?'+Date.now();
+    var ts = Date.now();
+    // note: some older Safari may not allow direct svg from coingecko due to CORS when embedded as <img>. If that happens, images will still show as broken icon; we provide fallback to simple text.
+    document.getElementById('btcChart').src = 'https://www.coingecko.com/coins/1/sparkline.svg?'+ts;
+    document.getElementById('ethChart').src = 'https://www.coingecko.com/coins/279/sparkline.svg?'+ts;
+    document.getElementById('solChart').src = 'https://www.coingecko.com/coins/5426/sparkline.svg?'+ts; // solana id variant
 }
 
-// ---- Quote ----
-function loadQuote() {
+// --- Quote with fallback ---
+var localQuotes = [
+    'Действие — мост между мечтой и результатом.',
+    'Маленький прогресс каждый день приводит к большим результатам.',
+    'Не жди — создавай возможности.',
+    'Консистентность важнее мотивации.',
+    'Ошибки — это информация, не приговор.'
+];
+function loadQuote(){
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'https://api.quotable.io/random');
-    xhr.onload = function() {
-        if (xhr.status === 200) {
-            var q = JSON.parse(xhr.responseText);
-            document.getElementById('quote').innerHTML = q.content;
+    xhr.open('GET','https://api.quotable.io/random');
+    xhr.timeout = 5000;
+    xhr.onload = function(){
+        if(xhr.status===200){
+            try{ var q = JSON.parse(xhr.responseText); document.getElementById('quote').textContent = q.content; }
+            catch(e){ document.getElementById('quote').textContent = localQuotes[Math.floor(Math.random()*localQuotes.length)]; }
+        } else {
+            document.getElementById('quote').textContent = localQuotes[Math.floor(Math.random()*localQuotes.length)];
         }
     };
-    xhr.send();
+    xhr.ontimeout = function(){ document.getElementById('quote').textContent = localQuotes[Math.floor(Math.random()*localQuotes.length)]; };
+    xhr.onerror = function(){ document.getElementById('quote').textContent = localQuotes[Math.floor(Math.random()*localQuotes.length)]; };
+    try { xhr.send(); } catch(e){ document.getElementById('quote').textContent = localQuotes[Math.floor(Math.random()*localQuotes.length)]; }
 }
 
-// ---- Todo List ----
-var todos = JSON.parse(localStorage.getItem('todos') || '[]');
+// allow tapping quote to change
+document.addEventListener('click', function(e){
+    if(e.target && e.target.id==='quote'){ loadQuote(); }
+}, false);
 
-function renderTodos() {
-    var box = document.getElementById('todoList');
-    box.innerHTML = '';
-    for (var i=0;i<todos.length;i++){
-        var item = document.createElement('div');
-        item.className = 'todo-item';
-        item.innerHTML = '<input type="checkbox" '+(todos[i].done?'checked':'')+' onclick="toggleTodo('+i+')">' +
-                         '<input class="todo-text" value="'+todos[i].text+'" oninput="editTodo('+i+', this.value)">';
-        box.appendChild(item);
+// --- Todos: do not re-render whole list to avoid keyboard dismissal ---
+var todos = ls('todos') || [];
+function renderAllTodos(){
+    var container = document.getElementById('todoList');
+    container.innerHTML = '';
+    for(var i=0;i<todos.length;i++){ container.appendChild(createTodoElement(todos[i])); }
+}
+function createTodoElement(item){
+    var wrap = document.createElement('div'); wrap.className = 'todo-item'; wrap.setAttribute('data-id', item.id);
+    var cb = document.createElement('input'); cb.type='checkbox'; cb.className='todo-checkbox'; cb.checked = !!item.done;
+    cb.onchange = function(){ item.done = cb.checked; saveTodos(); };
+    var txt = document.createElement('input'); txt.type='text'; txt.className='todo-text'; txt.value = item.text;
+    // keep focus: do not recreate element on input, just update model
+    txt.oninput = function(){ item.text = this.value; saveTodos(); };
+    txt.onfocus = function(){ /* keep keyboard */ };
+    var del = document.createElement('button'); del.className='todo-delete'; del.textContent='✕';
+    del.onclick = function(){ removeTodoById(item.id); };
+    wrap.appendChild(cb); wrap.appendChild(txt); wrap.appendChild(del);
+    return wrap;
+}
+function addNewTodo(text){
+    var obj = { id: 't'+(new Date()).getTime(), text: text || 'New task', done:false };
+    todos.unshift(obj);
+    ls('todos', todos);
+    var list = document.getElementById('todoList');
+    list.insertBefore(createTodoElement(obj), list.firstChild);
+}
+function removeTodoById(id){
+    for(var i=0;i<todos.length;i++){ if(todos[i].id === id){ todos.splice(i,1); break; } }
+    ls('todos', todos);
+    var el = document.querySelector('[data-id="'+id+'"]'); if(el && el.parentNode) el.parentNode.removeChild(el);
+}
+function saveTodos(){ ls('todos', todos); }
+
+// init todo controls
+document.getElementById('addBtn').onclick = function(){
+    var v = document.getElementById('newTodo').value.replace(/^\s+|\s+$/g,'');
+    if(v.length===0) return; addNewTodo(v); document.getElementById('newTodo').value='';
+};
+// add on enter
+document.getElementById('newTodo').addEventListener('keypress', function(e){ if(e.key==='Enter' || e.keyCode===13){ document.getElementById('addBtn').click(); } }, false);
+
+document.getElementById('clearDone').onclick = function(){
+    var leftover = [];
+    for(var i=0;i<todos.length;i++){ if(!todos[i].done) leftover.push(todos[i]); }
+    todos = leftover; ls('todos', todos); renderAllTodos();
+};
+
+// --- Vitamins / habits (store objects with id) ---
+var vits = ls('vits') || [ {id:'v1',name:'Утро',on:false}, {id:'v2',name:'День',on:false}, {id:'v3',name:'Вечер',on:false} ];
+function renderVits(){
+    var box = document.getElementById('vitGrid'); box.innerHTML = '';
+    for(var i=0;i<vits.length;i++){
+        var it = vits[i];
+        var wr = document.createElement('div'); wr.className='vit-item'; wr.setAttribute('data-id', it.id);
+        var cb = document.createElement('input'); cb.type='checkbox'; cb.checked = !!it.on;
+        cb.onchange = (function(idx){ return function(){ vits[idx].on = this.checked; ls('vits', vits); }; })(i);
+        var lbl = document.createElement('div'); lbl.style.marginLeft='8px'; lbl.textContent = it.name;
+        var del = document.createElement('button'); del.style.marginLeft='8px'; del.textContent='✕'; del.onclick = (function(id){ return function(){ removeVit(id); }; })(it.id);
+        wr.appendChild(cb); wr.appendChild(lbl); wr.appendChild(del);
+        box.appendChild(wr);
     }
 }
+function addVit(name){ if(!name) return; vits.push({id:'v'+(new Date()).getTime(),name:name,on:false}); ls('vits', vits); renderVits(); }
+function removeVit(id){ for(var i=0;i<vits.length;i++){ if(vits[i].id===id){ vits.splice(i,1); break; } } ls('vits', vits); renderVits(); }
 
-function addTodo(){
-    todos.push({text:'New task', done:false});
-    saveTodos();
-}
-function toggleTodo(i){ todos[i].done = !todos[i].done; saveTodos(); }
-function editTodo(i, val){ todos[i].text = val; saveTodos(); }
-function saveTodos(){ localStorage.setItem('todos', JSON.stringify(todos)); renderTodos(); }
+document.getElementById('addVit').onclick = function(){ var v=document.getElementById('newVit').value.replace(/^\s+|\s+$/g,''); if(!v) return; addVit(v); document.getElementById('newVit').value=''; };
+// enter key for vit
+document.getElementById('newVit').addEventListener('keypress', function(e){ if(e.key==='Enter' || e.keyCode===13){ document.getElementById('addVit').click(); } }, false);
 
-// ---- Vitamins ----
-var vitList = ['vitA','vitB','vitC'];
-function saveVits(){
-    var st = {};
-    for (var i=0;i<vitList.length;i++){
-        var id = vitList[i];
-        st[id] = document.getElementById(id).checked;
-    }
-    localStorage.setItem('vits', JSON.stringify(st));
-}
-function loadVits(){
-    var st = JSON.parse(localStorage.getItem('vits')||'{}');
-    for (var key in st){
-        if (document.getElementById(key)){
-            document.getElementById(key).checked = st[key];
-        }
-    }
-    for (var i=0;i<vitList.length;i++){
-        document.getElementById(vitList[i]).onchange = saveVits;
-    }
-}
+// --- Init ---
+(function init(){
+    // render existing data
+    if(todos && todos.length) renderAllTodos();
+    else todos = todos || [];
+    if(vits && vits.length) renderVits();
+    ls('todos', todos); ls('vits', vits);
 
-// ---- Init ----
-loadPrices();
-loadCharts();
-loadQuote();
-renderTodos();
-loadVits();
+    loadPrices(); loadCharts(); loadQuote();
+    setInterval(loadPrices,15000);
+    setInterval(loadCharts,15000);
+    setInterval(loadQuote,60000);
+})();
 
-setInterval(loadPrices, 15000);
-setInterval(loadCharts, 15000);
-setInterval(loadQuote, 60000);
 </script>
-
 </body>
 </html>
