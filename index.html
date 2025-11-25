@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+  <title>Minimal Dashboard</title>
+  <style>
+    :root{--bg:#0f1720;--card:#0b1220;--muted:#9aa4b2;--accent:#7dd3fc}
+    html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;color:#e6eef6;background:linear-gradient(180deg,#071021 0%,#071521 100%)}
+    .wrap{max-width:900px;margin:12px auto;display:grid;grid-template-columns:1fr 360px;gap:12px;padding:8px}
+    @media(max-width:700px){.wrap{grid-template-columns:1fr;}}
+    .card{background:rgba(255,255,255,0.03);border-radius:12px;padding:12px;box-shadow:0 6px 18px rgba(2,6,23,0.6);}
+    .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+    .time{font-size:28px;font-weight:600}
+    .date{color:var(--muted);font-size:12px}
+    .small{font-size:12px;color:var(--muted)}
+    .charts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    @media(max-width:700px){.charts{grid-template-columns:1fr}}
+    canvas{width:100%!important;height:160px!important}
+    .quote{font-size:16px;font-style:italic;color:#cfeefc}
+    .todo-list{display:flex;flex-direction:column;gap:8px}
+    .todo-input{display:flex;gap:8px}
+    input,button,textarea{padding:8px;border-radius:8px;border:0;background:rgba(255,255,255,0.03);color:inherit}
+    .todo-item{display:flex;align-items:center;gap:8px;padding:8px;border-radius:8px;background:rgba(255,255,255,0.01)}
+    .pill-grid{display:flex;flex-wrap:wrap;gap:8px}
+    .pill{padding:8px 10px;border-radius:999px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.02);min-width:80px;text-align:center}
+    .pill.on{background:linear-gradient(90deg,#065f46,#064e3b);color:#e6fff6}
+    .muted{color:var(--muted)}
+    .controls{display:flex;gap:8px;align-items:center}
+    .linklike{background:none;border:0;color:var(--accent);text-decoration:underline;padding:0}
+    footer{margin-top:10px;color:var(--muted);font-size:12px;text-align:center}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div>
+      <div class="card">
+        <div class="top">
+          <div>
+            <div class="time" id="time">--:--</div>
+            <div class="date" id="date">—</div>
+          </div>
+          <div class="small">Minimal Dashboard</div>
+        </div>
+        <div style="margin-top:8px">
+          <div class="charts">
+            <div class="card" style="padding:8px">
+              <div class="small">BTC (24h)</div>
+              <canvas id="chartBTC"></canvas>
+            </div>
+            <div class="card" style="padding:8px">
+              <div class="small">ETH (24h)</div>
+              <canvas id="chartETH"></canvas>
+            </div>
+          </div>
+          <div class="charts" style="margin-top:8px">
+            <div class="card" style="padding:8px;grid-column:span 2">
+              <div class="small">SOL (24h)</div>
+              <canvas id="chartSOL"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:12px;display:flex;flex-direction:column;gap:8px">
+        <div class="quote" id="quote">"Loading quote..."</div>
+        <div class="small muted">Нажми на цитату чтобы получить другую.</div>
+      </div>
+
+      <div class="card" style="margin-top:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <div class="small">To‑Do</div>
+          <div class="small muted">Синхронизируется локально</div>
+        </div>
+        <div class="todo-list" id="todos"></div>
+        <div class="todo-input" style="margin-top:8px">
+          <input id="todoText" placeholder="Добавить задачу" />
+          <button id="addTodo">Добавить</button>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div>
+            <div class="small">Трекер таблеток / привычек</div>
+            <div class="muted small">Отметь приёмы в течение дня</div>
+          </div>
+          <div class="controls"><button id="addPill">Добавить</button><button id="resetPills">Сброс</button></div>
+        </div>
+        <div class="pill-grid" id="pills"></div>
+      </div>
+
+      <div class="card" style="margin-top:12px">
+        <div class="small">Настройки обновления</div>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <label class="small muted">Интервал:</label>
+          <select id="interval">
+            <option value="300000">5 минут</option>
+            <option value="600000">10 минут</option>
+            <option value="1800000">30 минут</option>
+            <option value="0">Не обновлять</option>
+          </select>
+        </div>
+        <div style="margin-top:12px" class="small muted">Совет: установить "Автоблокировку" → "Никогда" и поставить iPad на зарядку.</div>
+      </div>
+
+      <footer class="card" style="margin-top:12px">Нажми <button class="linklike" id="homeScreen">Добавить на экран домой</button> (Safari) — чтобы запускать как приложение.</footer>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+  <script>
+    // --- Time & date ---
+    function updateTime(){
+      const now=new Date();
+      const hh=now.getHours().toString().padStart(2,'0');
+      const mm=now.getMinutes().toString().padStart(2,'0');
+      document.getElementById('time').textContent=hh+':'+mm;
+      document.getElementById('date').textContent=now.toLocaleDateString();
+    }
+    setInterval(updateTime,1000);updateTime();
+
+    // --- Simple quotes ---
+    const quotes=[
+      "Действие — мост между мечтой и результатом.",
+      "Маленький прогресс каждый день приводит к большим результатам.",
+      "Не жди — создавай возможности.",
+      "Консистентность важнее мотивации.",
+      "Ошибки — это информация, не приговор."
+    ];
+    const qEl=document.getElementById('quote');
+    function setQuote(i){qEl.textContent='"'+quotes[i%quotes.length]+'"';}
+    qEl.addEventListener('click',()=>{setQuote(Math.floor(Math.random()*quotes.length));});
+    setQuote(Math.floor(Math.random()*quotes.length));
+
+    // --- LocalStorage helpers ---
+    function ls(key, val){ if(arguments.length===2){localStorage.setItem(key,JSON.stringify(val));}else{return JSON.parse(localStorage.getItem(key)||'null');}}
+
+    // --- ToDos ---
+    function renderTodos(){
+      const list=ls('md_todos')||[];
+      const container=document.getElementById('todos');container.innerHTML='';
+      list.forEach((t,idx)=>{
+        const row=document.createElement('div');row.className='todo-item';
+        const cb=document.createElement('input');cb.type='checkbox';cb.checked=t.done;cb.addEventListener('change',()=>{list[idx].done=cb.checked;ls('md_todos',list);renderTodos();});
+        const txt=document.createElement('div');txt.textContent=t.text;txt.style.flex='1';txt.style.textDecoration=t.done?'line-through':'';
+        const del=document.createElement('button');del.textContent='✕';del.addEventListener('click',()=>{list.splice(idx,1);ls('md_todos',list);renderTodos();});
+        row.appendChild(cb);row.appendChild(txt);row.appendChild(del);container.appendChild(row);
+      });
+    }
+    document.getElementById('addTodo').addEventListener('click',()=>{
+      const v=document.getElementById('todoText').value.trim();if(!v) return;const list=ls('md_todos')||[];list.unshift({text:v,done:false});ls('md_todos',list);document.getElementById('todoText').value='';renderTodos();});
+    renderTodos();
+
+    // --- Pills / habits ---
+    function renderPills(){
+      const pills=ls('md_pills')||[{name:'Утро',on:false},{name:'День',on:false},{name:'Вечер',on:false}];
+      ls('md_pills',pills);
+      const container=document.getElementById('pills');container.innerHTML='';
+      pills.forEach((p,idx)=>{
+        const el=document.createElement('div');el.className='pill'+(p.on?' on':'');el.textContent=p.name;el.addEventListener('click',()=>{p.on=!p.on;ls('md_pills',pills);renderPills();});container.appendChild(el);
+      });
+    }
+    document.getElementById('addPill').addEventListener('click',()=>{
+      const name=prompt('Название привычки / таблетки (например: Витамин D)');if(!name) return;const pills=ls('md_pills')||[];pills.push({name:name,on:false});ls('md_pills',pills);renderPills();});
+    document.getElementById('resetPills').addEventListener('click',()=>{if(confirm('Сбросить все отметки на сегодня?')){const pills=ls('md_pills')||[];pills.forEach(p=>p.on=false);ls('md_pills',pills);renderPills();}});
+    renderPills();
+
+    // --- Charts ---
+    const cfg=(label)=>({type:'line',data:{labels:[],datasets:[{label:label,data:[],fill:true,pointRadius:0,borderWidth:1}]},options:{responsive:true,maintainAspectRatio:false,legend:{display:false},scales:{xAxes:[{display:false}],yAxes:[{ticks:{callback:function(v){return v>999?('$'+(v/1000).toFixed(1)+'k'):('$'+v.toFixed(0))}}}]},tooltips:{callbacks:{label:function(tooltipItem){return '$'+tooltipItem.yLabel.toFixed(2)}}}}});
+    const ctxBTC=document.getElementById('chartBTC').getContext('2d');const ctxETH=document.getElementById('chartETH').getContext('2d');const ctxSOL=document.getElementById('chartSOL').getContext('2d');
+    const chartBTC=new Chart(ctxBTC,cfg('BTC'));const chartETH=new Chart(ctxETH,cfg('ETH'));const chartSOL=new Chart(ctxSOL,cfg('SOL'));
+
+    async function fetchChart(id,chart){
+      try{
+        const res=await fetch('https://api.coingecko.com/api/v3/coins/'+id+'/market_chart?vs_currency=usd&days=1&interval=hourly');
+        const data=await res.json();
+        const prices=data.prices||[];
+        chart.data.labels=prices.map(p=>{const d=new Date(p[0]);return d.getHours()+':'+d.getMinutes().toString().padStart(2,'0')});
+        chart.data.datasets[0].data=prices.map(p=>p[1]);chart.update();
+      }catch(e){console.log('err',e);}    }
+
+    async function updateAll(){
+      await Promise.all([fetchChart('bitcoin',chartBTC),fetchChart('ethereum',chartETH),fetchChart('solana',chartSOL)]);
+    }
+    updateAll();
+
+    // Refresh interval control
+    let timer=null;function setRefresh(ms){if(timer) clearInterval(timer);if(ms>0){timer=setInterval(updateAll,ms);}}
+    document.getElementById('interval').addEventListener('change',(e)=>{setRefresh(parseInt(e.target.value));});
+    // default 5 minutes
+    setRefresh(300000);
+
+    // --- Home screen prompt (explain only) ---
+    document.getElementById('homeScreen').addEventListener('click',()=>{alert('В Safari: кнопка "Поделиться" → "На экран домой". После этого откройте ярлык — сайт будет запускаться как приложение.');});
+
+    // --- simple autosave for quotes/time state (not needed) ---
+  </script>
+</body>
+</html>
