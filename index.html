@@ -2,179 +2,269 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Cyber Minimal Dashboard</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cyber Minimal — Final</title>
 <style>
-  /* Cyber minimal theme — compatible with older Safari */
-  html,body{height:100%;margin:0;padding:0;background:#040405;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:#cfeefc}
-  .container{max-width:980px;margin:14px auto;padding:14px}
-  .grid{display:flex;flex-wrap:wrap;gap:12px}
-  .card{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border-radius:14px;padding:12px;box-shadow:0 8px 30px rgba(0,0,0,0.8);border:1px solid rgba(125,211,252,0.06)}
-  .row{display:flex;align-items:center;justify-content:space-between}
-  .col-left{flex:1;margin-right:12px}
-  .muted{color:#5f7f8f;font-size:12px}
-  h1{font-size:18px;margin:0 0 6px 0;color:#9ee9ff}
-  .small{font-size:13px;color:#b7dbe6}
-  /* Top bar */
-  .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-  .brand{font-weight:700;letter-spacing:0.6px;color:#7ef0ff}
-  .time{font-weight:600;font-size:16px}
-  /* Layout specifics */
+  /* --- Base & background --- */
+  html,body{height:100%;margin:0;padding:0;background:#040405;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:#dff6ff;overflow-y:auto}
+  /* particle canvas covers background */
+  #bgCanvas{position:fixed;left:0;top:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.12}
+  .glitch { display:inline-block; position:relative; }
+  .glitch::before, .glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    left: 0; top: 0;
+    width:100%;
+    overflow:hidden;
+    clip: rect(0, 9999px, 0, 0);
+  }
+  .glitch::before { left:2px; text-shadow:-2px 0 #9b5cff; animation:glitchTop 3s infinite linear; opacity:0.9;}
+  .glitch::after { left:-2px; text-shadow:2px 0 #7ef0ff; animation:glitchBot 2.7s infinite linear; opacity:0.85;}
+  @keyframes glitchTop { 0%{clip:rect(0,9999px,0,0);}20%{clip:rect(0,9999px,12px,0);}40%{clip:rect(0,9999px,0,0);}60%{clip:rect(0,9999px,14px,0);}80%{clip:rect(0,9999px,0,0);}100%{clip:rect(0,9999px,0,0);} }
+  @keyframes glitchBot { 0%{clip:rect(0,9999px,0,0);}25%{clip:rect(8px,9999px,9999px,0);}50%{clip:rect(0,9999px,0,0);}75%{clip:rect(6px,9999px,9999px,0);}100%{clip:rect(0,9999px,0,0);} }
+
+  .container{position:relative;z-index:2;max-width:980px;margin:14px auto;padding:14px}
+  .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+  .brand{font-weight:800;letter-spacing:1px;color:#b99bff;font-size:18px}
+  .time{font-weight:600;font-size:15px;color:#d8faff}
+
+  /* layout */
+  .grid{display:flex;gap:12px;flex-wrap:wrap}
   .leftCol{flex:1;min-width:300px}
-  .rightCol{width:320px;min-width:260px}
-  /* Crypto card */
-  .crypto-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px dashed rgba(125,211,252,0.04)}
+  .rightCol{width:340px;min-width:260px}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,0.016),rgba(255,255,255,0.01));border-radius:14px;padding:12px;box-shadow:0 10px 30px rgba(155,92,255,0.12), inset 0 1px 0 rgba(255,255,255,0.02);border:1px solid rgba(155,92,255,0.06);margin-bottom:12px}
+  h1{margin:0;font-size:15px;color:#cfc3ff}
+  .muted{font-size:12px;color:#7d9aa8;margin-top:6px}
+
+  /* Crypto */
+  .crypto-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px dashed rgba(155,92,255,0.04)}
   .crypto-row:last-child{border-bottom:0}
-  .ticker{font-family:monospace;font-weight:700;color:#d8fbff}
-  .price{font-family:monospace;color:#e6ffe9}
-  img.spark{width:120px;height:48px;object-fit:cover;border-radius:6px;border:1px solid rgba(125,211,252,0.04)}
+  .ticker{font-family:monospace;font-weight:700;color:#e6fff7}
+  .price{font-family:monospace;color:#e6ffd9}
+  img.spark{width:110px;height:44px;object-fit:cover;border-radius:8px;border:1px solid rgba(155,92,255,0.04);margin-left:10px}
+
   /* Quote */
-  .quote{font-size:15px;padding:8px 6px;border-radius:8px;background:rgba(126,240,255,0.02);border:1px solid rgba(126,240,255,0.03)}
+  .quote{font-size:15px;padding:8px;border-radius:8px;background:linear-gradient(180deg,rgba(155,92,255,0.02),transparent);border:1px solid rgba(155,92,255,0.03);color:#dff6ff}
+
   /* Todo */
   .todo-list{margin-top:8px}
-  .todo-item{display:flex;align-items:center;padding:8px;border-radius:8px;margin-bottom:6px;background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent)}
+  .todo-item{display:flex;align-items:center;padding:8px;border-radius:8px;margin-bottom:6px;background:linear-gradient(180deg,rgba(0,0,0,0.06),transparent)}
   .todo-item input[type=text]{flex:1;border:0;background:transparent;color:inherit;padding:6px;font-size:14px;outline:none}
-  .todo-item button{background:none;border:0;color:#ff8b8b;padding:6px;font-size:14px}
+  .todo-item button{background:none;border:0;color:#ff9b9b;padding:6px;font-size:14px}
   .controls{display:flex;gap:8px;margin-top:8px}
-  input[type=text].small{padding:6px;border-radius:8px;border:0;background:#031316;color:inherit}
-  button.ghost{background:transparent;border:1px solid rgba(125,211,252,0.08);padding:8px;border-radius:8px;color:#7de0ff}
-  /* Vits */
-  .vit-item{display:flex;align-items:center;justify-content:space-between;padding:8px;border-radius:8px;margin:6px 0;background:rgba(255,255,255,0.01)}
-  .vit-item label{display:flex;align-items:center;gap:10px}
-  input[type=checkbox]{width:18px;height:18px}
+  input[type=text].small{padding:8px;border-radius:8px;border:0;background:#061216;color:inherit}
+
   /* Habit rings */
-  .rings{display:flex;align-items:center;gap:10px}
-  .ring-wrap{width:96px;height:96px;text-align:center}
-  .ring-label{font-size:12px;color:#9fd9e8;margin-top:6px}
+  .rings{display:flex;gap:10px;align-items:center;justify-content:flex-start;flex-wrap:wrap}
+  .ring-wrap{width:92px;height:92px;text-align:center}
+  .ring-label{font-size:12px;color:#bfb0ff;margin-top:6px}
+  canvas.ring{width:92px;height:92px;border-radius:10px;background:transparent}
+
+  /* Quick actions */
+  .quick-grid{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  .quick-btn{background:linear-gradient(180deg,#9b5cff,#7f43ff);border:0;padding:8px 10px;border-radius:10px;color:#000;font-weight:700}
+
   /* Pomodoro */
-  .pomodoro{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px}
-  .pom-time{font-size:28px;font-weight:700;color:#bff8ff}
-  .pom-controls{display:flex;gap:8px;margin-top:10px}
-  /* footer small */
-  .tiny{font-size:11px;color:#4a6e79;margin-top:8px}
+  .pom-time{font-size:30px;font-weight:800;color:#e9d8ff;text-align:center;margin-top:8px}
+  .pom-controls{display:flex;gap:8px;justify-content:center;margin-top:10px}
+
+  /* Weather compact */
+  .weather-line{display:flex;align-items:center;justify-content:space-between}
+  .weather-left{display:flex;align-items:center;gap:10px}
+  .weather-icon{width:44px;height:44px;border-radius:8px;background:rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:center;font-size:20px}
+  .temp{font-size:24px;color:#d8c8ff;font-weight:700}
+
+  /* footer / tiny */
+  .tiny{font-size:11px;color:#5a7a86;margin-top:8px}
+
+  /* neon glow */
+  .glow{box-shadow:0 6px 28px rgba(155,92,255,0.08);border:1px solid rgba(155,92,255,0.05)}
+  /* elevated cards */
+  .card.elev{box-shadow:0 18px 45px rgba(0,0,0,0.6),0 6px 20px rgba(155,92,255,0.10);}
+
+  /* 24/7 pixel-protection gentle pan */
+  .screen-guard-active { animation:guardPan 60s linear infinite; }
+  @keyframes guardPan { 0%{transform:translateY(0)}50%{transform:translateY(2px)}100%{transform:translateY(0)} }
+
   /* responsive */
   @media(max-width:860px){ .grid{flex-direction:column} .rightCol{width:100%} }
 </style>
 </head>
 <body>
-<div class="container">
-  <div class="top">
-    <div class="brand">CYBER DASH</div>
+
+<canvas id="bgCanvas"></canvas>
+
+<div class="container" id="app">
+  <div class="topbar">
+    <div class="brand glitch" data-text="CYBER DASH">CYBER DASH</div>
     <div class="time" id="time">--:--</div>
   </div>
 
   <div class="grid">
-    <!-- Left column -->
+    <!-- left -->
     <div class="leftCol">
-      <!-- CRYPTO CARD -->
-      <div class="card">
+      <!-- Markets -->
+      <div class="card elev" id="marketsCard">
         <h1>MARKETS</h1>
-        <div class="muted">Live prices & mini spark</div>
-        <div id="cryptoRows" style="margin-top:10px">
-          <!-- rows injected by JS -->
-        </div>
-        <div class="tiny">Источник цен: Coinlore · Спарклайны: CoinGecko</div>
+        <div class="muted">prices · sparklines</div>
+        <div id="cryptoRows" style="margin-top:10px"></div>
+        <div class="tiny">Source: Coinlore (prices) · CoinGecko (sparklines)</div>
       </div>
 
-      <!-- QUOTE + TODO -->
-      <div style="display:flex;gap:12px;margin-top:12px;flex-wrap:wrap">
-        <div style="flex:1;min-width:260px" class="card">
+      <!-- Quote + Todo -->
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <div style="flex:1;min-width:260px" class="card glow">
           <h1>QUOTE</h1>
           <div class="quote" id="quote">Loading...</div>
-          <div class="tiny">Tap the quote to fetch another.</div>
+          <div class="tiny">Tap to change.</div>
         </div>
 
-        <div style="flex:1;min-width:260px" class="card">
+        <div style="flex:1;min-width:260px" class="card glow">
           <h1>TO-DO</h1>
           <div class="todo-list" id="todoList"></div>
           <div class="controls">
             <input id="newTodo" class="small" type="text" placeholder="Add task and press Enter">
-            <button id="addTodo" class="ghost">Add</button>
-            <button id="clearDone" class="ghost">Clear done</button>
+            <button id="addTodo" class="quick-btn">Add</button>
+            <button id="clearDone" class="quick-btn">Clear</button>
           </div>
-          <div class="tiny">Click text to edit — keyboard stays.</div>
+          <div class="tiny">Tap text to edit — keyboard stays.</div>
         </div>
       </div>
 
       <!-- Pomodoro -->
-      <div class="card" style="margin-top:12px">
-        <h1>POMODORO</h1>
-        <div class="pomodoro">
-          <div id="pomTime" class="pom-time">25:00</div>
-          <div class="pom-controls">
-            <button id="pomStart" class="ghost">Start</button>
-            <button id="pomPause" class="ghost">Pause</button>
-            <button id="pomReset" class="ghost">Reset</button>
-          </div>
-          <div class="tiny">Work interval: 25:00 · Breaks manual</div>
+      <div class="card elev">
+        <h1>POMODORO — Focus (25 min)</h1>
+        <div class="pom-time" id="pomTime">25:00</div>
+        <div class="pom-controls">
+          <button id="pomStart" class="quick-btn">Start</button>
+          <button id="pomPause" class="quick-btn">Pause</button>
+          <button id="pomReset" class="quick-btn">Reset</button>
         </div>
+        <div class="tiny">When finished — alert will show.</div>
       </div>
+
     </div>
 
-    <!-- Right column -->
+    <!-- right -->
     <div class="rightCol">
-      <div class="card">
+      <div class="card elev">
         <h1>HABIT RINGS</h1>
-        <div class="muted">Tap ring to toggle progress for today</div>
-        <div class="rings" style="margin-top:10px" id="ringsContainer">
-          <!-- canvas rings -->
-        </div>
-        <div class="tiny">Rings store simple completion (0 or 1) — visual minimal rings.</div>
+        <div class="muted">Tap ring to toggle daily completion</div>
+        <div class="rings" id="ringsContainer" style="margin-top:10px"></div>
+        <div class="tiny">Rings store boolean completion per day; they animate smoothly.</div>
       </div>
 
-      <div class="card" style="margin-top:12px">
+      <div class="card glow">
         <h1>VITAMINS</h1>
-        <div class="muted">Quick check for pills</div>
         <div id="vitList" style="margin-top:8px"></div>
         <div class="controls" style="margin-top:8px">
           <input id="newVit" class="small" type="text" placeholder="Add vitamin">
-          <button id="addVit" class="ghost">Add</button>
+          <button id="addVit" class="quick-btn">Add</button>
         </div>
+        <div class="tiny">Quick check for pills.</div>
       </div>
 
-      <div class="card" style="margin-top:12px">
-        <h1>SETTINGS</h1>
-        <div class="muted">Update intervals & quick actions</div>
-        <div style="margin-top:8px">
-          <div class="small">Refresh interval</div>
-          <div style="display:flex;gap:8px;margin-top:6px">
-            <button class="ghost" id="int5">5s</button>
-            <button class="ghost" id="int15">15s</button>
-            <button class="ghost" id="int30">30s</button>
-            <button class="ghost" id="int0">Stop</button>
+      <div class="card elev">
+        <h1>QUICK ACTIONS</h1>
+        <div class="muted">Track tiny wins (counts stored)</div>
+        <div class="quick-grid" id="quickGrid">
+          <!-- injected buttons -->
+        </div>
+        <div class="tiny" style="margin-top:8px">Water · Walk · Meditate</div>
+      </div>
+
+      <div class="card glow">
+        <h1>WEATHER — Kharkiv</h1>
+        <div class="weather-line">
+          <div class="weather-left">
+            <div class="weather-icon" id="wIcon">☁</div>
+            <div>
+              <div id="wCond" class="muted">Loading...</div>
+              <div class="temp" id="wTemp">--°C</div>
+            </div>
+          </div>
+          <div>
+            <div class="muted">Wind</div>
+            <div id="wWind" class="muted">-- km/h</div>
           </div>
         </div>
-        <div style="margin-top:10px">
-          <button id="reloadAll" class="ghost">Reload now</button>
-        </div>
-        <div class="tiny">Tip: set iPad to never sleep and add to Home Screen for app-like feel.</div>
+        <div class="tiny" style="margin-top:8px">Data: Open-Meteo</div>
       </div>
+
+      <div class="card">
+        <h1>SETTINGS</h1>
+        <div class="muted">Update intervals & screen options</div>
+        <div style="margin-top:8px">
+          <div style="display:flex;gap:8px;margin-top:6px">
+            <button class="quick-btn" id="int5">5s</button>
+            <button class="quick-btn" id="int15">15s</button>
+            <button class="quick-btn" id="int30">30s</button>
+            <button class="quick-btn" id="int0">Stop</button>
+          </div>
+          <div style="margin-top:8px">
+            <button id="reloadAll" class="quick-btn">Reload now</button>
+          </div>
+          <div style="margin-top:8px">
+            <label style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="guardToggle"> Enable 24/7 screen guard</label>
+          </div>
+        </div>
+        <div class="tiny" style="margin-top:8px">Tip: Set iPad Auto-Lock = Never and add to Home Screen.</div>
+      </div>
+
     </div>
   </div>
 </div>
 
 <script>
-/* Cyber Minimal Dashboard — ES5, old Safari friendly */
+/* -------------------------
+   Cyber Minimal — Final JS
+   ES5 + XHR for iOS10
+   ------------------------- */
 
-/* ---------- Utilities ---------- */
+(function(){
+
+/* ---------- utilities ---------- */
 function $(id){ return document.getElementById(id); }
 function lsGet(k){ try{ return JSON.parse(localStorage.getItem(k)||'null'); }catch(e){return null;} }
 function lsSet(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
-function nowISO(){ return (new Date()).toISOString(); }
+function clamp(v,a,b){ return v<a?a:(v>b?b:v); }
 
-/* ---------- Time ---------- */
-function updateClock(){
-  var d = new Date();
-  var hh = d.getHours(); if(hh < 10) hh = '0'+hh;
-  var mm = d.getMinutes(); if(mm < 10) mm = '0'+mm;
-  $('time').textContent = hh + ':' + mm;
+/* ---------- clock ---------- */
+function updateClock(){ var d=new Date(); var hh=d.getHours(); if(hh<10) hh='0'+hh; var mm=d.getMinutes(); if(mm<10) mm='0'+mm; $('time').textContent = hh+':'+mm; }
+setInterval(updateClock,1000); updateClock();
+
+/* ---------- particle background ---------- */
+var bg = $('bgCanvas');
+var ctx = bg.getContext && bg.getContext('2d');
+function resizeBg(){ bg.width = window.innerWidth; bg.height = window.innerHeight; }
+window.addEventListener('resize', resizeBg);
+resizeBg();
+
+var particles = [];
+for(var i=0;i<60;i++){ particles.push({x:Math.random()*bg.width, y:Math.random()*bg.height, vx:(Math.random()-0.5)*0.2, vy:(Math.random()-0.5)*0.2, r:1+Math.random()*2}); }
+function drawBg(){
+  if(!ctx) return;
+  ctx.clearRect(0,0,bg.width,bg.height);
+  for(var i=0;i<particles.length;i++){
+    var p = particles[i];
+    p.x += p.vx; p.y += p.vy;
+    if(p.x < 0) p.x = bg.width;
+    if(p.x > bg.width) p.x = 0;
+    if(p.y < 0) p.y = bg.height;
+    if(p.y > bg.height) p.y = 0;
+    ctx.beginPath();
+    ctx.fillStyle = 'rgba(155,92,255,0.9)';
+    ctx.globalAlpha = 0.08 + Math.random()*0.05;
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2,false);
+    ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+  requestAnimationFrame(drawBg);
 }
-setInterval(updateClock,1000);
-updateClock();
+requestAnimationFrame(drawBg);
 
-/* ---------- Crypto prices & sparks ---------- */
-var marketInterval = 15000; // default ms
-var marketTimer = null;
+/* ---------- markets & sparks ---------- */
+var marketInterval = 15000; var marketTimer = null;
 var coins = [
   {id:'bitcoin', name:'BTC', cgId:1, coLName:'Bitcoin'},
   {id:'ethereum', name:'ETH', cgId:279, coLName:'Ethereum'},
@@ -182,29 +272,29 @@ var coins = [
 ];
 
 function buildCryptoRows(){
-  var container = document.createElement('div');
+  var el = document.createElement('div');
   for(var i=0;i<coins.length;i++){
     var c = coins[i];
     var row = document.createElement('div'); row.className='crypto-row';
-    var left = document.createElement('div'); left.style.display='flex'; left.style.alignItems='center'; left.style.gap='10px';
+    var left = document.createElement('div'); left.style.display='flex'; left.style.alignItems='center'; left.style.gap='8px';
     var tick = document.createElement('div'); tick.className='ticker'; tick.textContent = c.name;
-    var lbl = document.createElement('div'); lbl.className='small'; lbl.textContent = c.coLName;
-    left.appendChild(tick); left.appendChild(lbl);
-    var right = document.createElement('div'); right.style.display='flex'; right.style.alignItems='center'; right.style.gap='10px';
-    var price = document.createElement('div'); price.className='price'; price.id = 'price_'+c.name;
-    var spark = document.createElement('img'); spark.className='spark'; spark.id = 'spark_'+c.name; spark.src = ''; spark.alt = 'spark';
+    var lab = document.createElement('div'); lab.className='muted'; lab.textContent = c.coLName;
+    left.appendChild(tick); left.appendChild(lab);
+    var right = document.createElement('div'); right.style.display='flex'; right.style.alignItems='center';
+    var price = document.createElement('div'); price.className='price'; price.id = 'price_'+c.name; price.textContent = '—';
+    var spark = document.createElement('img'); spark.className='spark'; spark.id = 'spark_'+c.name; spark.src=''; spark.alt = 'spark';
     right.appendChild(price); right.appendChild(spark);
     row.appendChild(left); row.appendChild(right);
-    container.appendChild(row);
+    el.appendChild(row);
   }
-  $('cryptoRows').appendChild(container);
+  $('cryptoRows').appendChild(el);
 }
 buildCryptoRows();
 
 function loadPricesXHR(){
   var xhr = new XMLHttpRequest();
   xhr.open('GET','https://api.coinlore.net/api/tickers/?start=0&limit=10');
-  xhr.timeout = 7000;
+  xhr.timeout = 8000;
   xhr.onload = function(){
     if(xhr.status === 200){
       try{
@@ -212,7 +302,6 @@ function loadPricesXHR(){
         var list = resp.data || [];
         for(var i=0;i<coins.length;i++){
           var c = coins[i];
-          // find by name
           var found = null;
           for(var j=0;j<list.length;j++){ if(list[j].name === c.coLName){ found = list[j]; break; } }
           var priceEl = $('price_'+c.name);
@@ -222,14 +311,12 @@ function loadPricesXHR(){
             priceEl.textContent = '—';
           }
         }
-        // last update
-        var lu = new Date(); if(document.getElementById('lastUpdate')) document.getElementById('lastUpdate').textContent = 'Updated: ' + lu.toLocaleTimeString();
-      }catch(e){ console.log('parse price err',e); }
+      } catch(err){ console.log('parse price err', err); }
     }
   };
   xhr.ontimeout = function(){ console.log('price timeout'); };
   xhr.onerror = function(){ console.log('price err'); };
-  xhr.send();
+  try{ xhr.send(); }catch(e){}
 }
 
 function loadSparks(){
@@ -237,9 +324,9 @@ function loadSparks(){
   for(var i=0;i<coins.length;i++){
     try{
       var img = $('spark_'+coins[i].name);
-      // coinGecko sparkline svg url (cache-bust)
+      // use coinGecko sparkline
       img.src = 'https://www.coingecko.com/coins/' + coins[i].cgId + '/sparkline.svg?' + ts;
-      // fallback: if image fails, a broken image will show — still safe
+      // if fails (CORS), image element shows broken; that's acceptable fallback
     }catch(e){}
   }
 }
@@ -261,10 +348,9 @@ function loadQuote(){
   var xhr = new XMLHttpRequest();
   xhr.open('GET','https://api.quotable.io/random');
   xhr.timeout = 5000;
-  xhr.onload = function(){ 
+  xhr.onload = function(){
     if(xhr.status === 200){
-      try{ var q = JSON.parse(xhr.responseText); $('quote').textContent = q.content; }
-      catch(e){ $('quote').textContent = localQuotes[Math.floor(Math.random()*localQuotes.length)]; }
+      try{ var q = JSON.parse(xhr.responseText); $('quote').textContent = q.content; } catch(e){ $('quote').textContent = localQuotes[Math.floor(Math.random()*localQuotes.length)]; }
     } else { $('quote').textContent = localQuotes[Math.floor(Math.random()*localQuotes.length)]; }
   };
   xhr.ontimeout = function(){ $('quote').textContent = localQuotes[Math.floor(Math.random()*localQuotes.length)]; };
@@ -273,196 +359,226 @@ function loadQuote(){
 }
 document.addEventListener('click', function(e){ if(e.target && e.target.id==='quote') loadQuote(); }, false);
 
-/* ---------- ToDo (no full re-render to avoid keyboard issue) ---------- */
+/* ---------- ToDo ---------- */
 var todos = lsGet('cyber_todos') || [];
-function renderTodos(){
-  var list = $('todoList'); list.innerHTML = '';
-  for(var i=0;i<todos.length;i++){
-    list.appendChild(makeTodoElement(todos[i]));
-  }
-}
-function makeTodoElement(item){
+function saveTodos(){ lsSet('cyber_todos', todos); }
+function makeTodoEl(item){
   var wrap = document.createElement('div'); wrap.className='todo-item'; wrap.setAttribute('data-id', item.id);
   var cb = document.createElement('input'); cb.type='checkbox'; cb.checked = !!item.done;
   cb.onchange = (function(it){ return function(){ it.done = this.checked; saveTodos(); }; })(item);
-  var txt = document.createElement('input'); txt.type='text'; txt.value = item.text; txt.oninput = (function(it){ return function(){ it.text = this.value; saveTodos(); }; })(item);
-  var del = document.createElement('button'); del.textContent='✕'; del.onclick = (function(id){ return function(){ removeTodo(id); }; })(item.id);
+  var txt = document.createElement('input'); txt.type='text'; txt.value = item.text;
+  txt.oninput = (function(it){ return function(){ it.text = this.value; saveTodos(); }; })(item);
+  var del = document.createElement('button'); del.textContent='✕';
+  del.onclick = (function(id){ return function(){ removeTodo(id); }; })(item.id);
   wrap.appendChild(cb); wrap.appendChild(txt); wrap.appendChild(del);
   return wrap;
+}
+function renderTodos(){
+  var container = $('todoList'); container.innerHTML = '';
+  for(var i=0;i<todos.length;i++) container.appendChild(makeTodoEl(todos[i]));
 }
 function addTodoText(t){
   var id = 'td'+(new Date()).getTime();
   todos.unshift({id:id,text:t,done:false});
   lsSet('cyber_todos', todos);
-  var el = makeTodoElement(todos[0]);
-  var list = $('todoList'); list.insertBefore(el, list.firstChild);
+  renderTodos();
 }
 function removeTodo(id){
   for(var i=0;i<todos.length;i++){ if(todos[i].id === id){ todos.splice(i,1); break; } }
-  lsSet('cyber_todos', todos);
-  var el = document.querySelector('[data-id="'+id+'"]'); if(el && el.parentNode) el.parentNode.removeChild(el);
+  lsSet('cyber_todos', todos); renderTodos();
 }
-function saveTodos(){ lsSet('cyber_todos', todos); }
 $('addTodo').addEventListener('click', function(){ var v=$('newTodo').value.replace(/^\s+|\s+$/g,''); if(v){ addTodoText(v); $('newTodo').value=''; } }, false);
 $('newTodo').addEventListener('keypress', function(e){ if(e.key === 'Enter' || e.keyCode === 13){ $('addTodo').click(); } }, false);
 $('clearDone').addEventListener('click', function(){ var left=[]; for(var i=0;i<todos.length;i++){ if(!todos[i].done) left.push(todos[i]); } todos=left; lsSet('cyber_todos', todos); renderTodos(); }, false);
 
 /* ---------- Vitamins ---------- */
-var vits = lsGet('cyber_vits') || [ {id:'v1',name:'Vitamin D',on:false}, {id:'v2',name:'Magnesium',on:false} ];
+var vits = lsGet('cyber_vits') || [{id:'v1',name:'Vitamin D',on:false},{id:'v2',name:'Magnesium',on:false}];
 function renderVits(){
   var box = $('vitList'); box.innerHTML = '';
   for(var i=0;i<vits.length;i++){
-    var it = vits[i];
-    var wr = document.createElement('div'); wr.className='vit-item';
-    var left = document.createElement('label');
-    var cb = document.createElement('input'); cb.type='checkbox'; cb.checked = !!it.on;
-    (function(idx,elem){ cb.onchange = function(){ vits[idx].on = this.checked; lsSet('cyber_vits', vits); }; })(i,cb);
-    var span = document.createElement('div'); span.textContent = it.name; span.style.marginLeft='8px';
-    left.appendChild(cb); left.appendChild(span);
-    var del = document.createElement('button'); del.textContent='✕'; del.onclick = (function(id){ return function(){ removeVit(id); }; })(it.id);
-    wr.appendChild(left); wr.appendChild(del);
-    box.appendChild(wr);
+    (function(it,idx){
+      var wr = document.createElement('div'); wr.className='vit-item';
+      var left = document.createElement('label');
+      var cb = document.createElement('input'); cb.type='checkbox'; cb.checked = !!it.on;
+      cb.onchange = function(){ vits[idx].on = this.checked; lsSet('cyber_vits', vits); };
+      var span = document.createElement('div'); span.style.marginLeft='8px'; span.textContent = it.name;
+      left.appendChild(cb); left.appendChild(span);
+      var del = document.createElement('button'); del.textContent='✕'; del.onclick = function(){ removeVit(it.id); };
+      wr.appendChild(left); wr.appendChild(del);
+      box.appendChild(wr);
+    })(vits[i], i);
   }
 }
-function addVit(name){
-  if(!name) return;
-  var id = 'vit'+(new Date()).getTime();
-  vits.push({id:id,name:name,on:false});
-  lsSet('cyber_vits', vits);
-  renderVits();
-}
-function removeVit(id){
-  for(var i=0;i<vits.length;i++){ if(vits[i].id === id){ vits.splice(i,1); break; } }
-  lsSet('cyber_vits', vits); renderVits();
-}
+function addVit(name){ if(!name) return; var id='vit'+(new Date()).getTime(); vits.push({id:id,name:name,on:false}); lsSet('cyber_vits', vits); renderVits(); }
+function removeVit(id){ for(var i=0;i<vits.length;i++){ if(vits[i].id===id){ vits.splice(i,1); break; } } lsSet('cyber_vits', vits); renderVits(); }
 $('addVit').addEventListener('click', function(){ var v=$('newVit').value.replace(/^\s+|\s+$/g,''); if(v){ addVit(v); $('newVit').value=''; } }, false);
 $('newVit').addEventListener('keypress', function(e){ if(e.key === 'Enter' || e.keyCode === 13){ $('addVit').click(); } }, false);
 
-/* ---------- Habit Rings ---------- */
-/* simple rings: each habit is 0/1 for today; draw arcs on canvas */
+/* ---------- Habit Rings (smooth animate to 0/1) ---------- */
 var habits = lsGet('cyber_habits') || [
-  {id:'h1',name:'Move',val:0, color:'#66ffcc'},
-  {id:'h2',name:'Focus',val:0, color:'#7ef0ff'},
-  {id:'h3',name:'Read',val:0, color:'#b78bff'}
+  {id:'h1',name:'Move',val:0,color:'#b78bff'},
+  {id:'h2',name:'Focus',val:0,color:'#9b5cff'},
+  {id:'h3',name:'hRead',val:0,color:'#b78bff'}
 ];
 
-function drawRingCanvas(canvas, percentage, strokeColor, bgColor){
-  try{
-    var ctx = canvas.getContext('2d');
-    var w = canvas.width; var h = canvas.height;
+function drawRing(canvas, target, color){
+  // target is 0..1
+  var ctx = canvas.getContext('2d');
+  var w = canvas.width; var h = canvas.height;
+  var cx = w/2; var cy = h/2; var r = Math.min(w,h)/2 - 8;
+  var current = canvas._anim || 0;
+  var step = 0.06; // animation speed
+  function tick(){
+    current += (target - current) * step;
+    canvas._anim = current;
     ctx.clearRect(0,0,w,h);
-    var cx = w/2; var cy = h/2; var r = Math.min(w,h)/2 - 8;
-    // background track
-    ctx.beginPath();
-    ctx.arc(cx,cy,r,0,Math.PI*2,false);
-    ctx.strokeStyle = bgColor || 'rgba(255,255,255,0.06)';
-    ctx.lineWidth = 8;
-    ctx.stroke();
-    // progress arc
-    var start = -Math.PI/2;
-    var end = start + (Math.PI*2) * (percentage||0);
-    ctx.beginPath();
-    ctx.arc(cx,cy,r,start,end,false);
-    ctx.strokeStyle = strokeColor || '#7ef0ff';
-    ctx.lineWidth = 8;
-    ctx.lineCap = 'round';
-    ctx.stroke();
+    // bg track
+    ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2,false);
+    ctx.strokeStyle = 'rgba(255,255,255,0.06)'; ctx.lineWidth = 8; ctx.stroke();
+    // progress
+    var start = -Math.PI/2; var end = start + (Math.PI*2) * current;
+    ctx.beginPath(); ctx.arc(cx,cy,r,start,end,false);
+    ctx.strokeStyle = color; ctx.lineWidth = 8; ctx.lineCap='round'; ctx.stroke();
     // center text
-    ctx.fillStyle = '#cfeefc';
-    ctx.font = '14px monospace';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    var pct = Math.round((percentage||0)*100) + '%';
-    ctx.fillText(pct, cx, cy);
-  }catch(e){ console.log('draw err',e); }
+    ctx.fillStyle = '#dfe9ff'; ctx.font='12px monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText(Math.round(current*100)+'%',cx,cy);
+    if(Math.abs(current - target) > 0.003) requestAnimationFrame(tick);
+  }
+  tick();
 }
 
 function renderRings(){
-  var cont = $('ringsContainer'); cont.innerHTML = '';
+  var container = $('ringsContainer'); container.innerHTML = '';
   for(var i=0;i<habits.length;i++){
-    (function(it,idx){
+    (function(it, idx){
       var wrap = document.createElement('div'); wrap.className='ring-wrap';
-      var cnv = document.createElement('canvas'); cnv.width = 96; cnv.height = 96; cnv.style.borderRadius='10px';
-      cnv.style.cursor='pointer';
+      var cnv = document.createElement('canvas'); cnv.className='ring'; cnv.width=92; cnv.height=92; cnv.style.cursor='pointer';
       cnv.onclick = function(){ toggleHabit(it.id); };
       wrap.appendChild(cnv);
       var lbl = document.createElement('div'); lbl.className='ring-label'; lbl.textContent = it.name;
       wrap.appendChild(lbl);
-      cont.appendChild(wrap);
-      drawRingCanvas(cnv, it.val?1:0, it.color, 'rgba(255,255,255,0.04)');
+      container.appendChild(wrap);
+      // draw to target
+      drawRing(cnv, it.val?1:0, it.color);
     })(habits[i], i);
   }
 }
-
 function toggleHabit(id){
   for(var i=0;i<habits.length;i++){
     if(habits[i].id === id){ habits[i].val = habits[i].val ? 0 : 1; break; }
   }
-  lsSet('cyber_habits', habits); renderRings();
+  lsSet('cyber_habits', habits);
+  renderRings();
 }
 
+/* ---------- Quick actions (water/walk/med) ---------- */
+var quick = lsGet('cyber_quick') || {water:0,walk:0,med:0};
+function renderQuick(){
+  var box = $('quickGrid'); box.innerHTML = '';
+  var keys = [{k:'water',t:'Water'},{k:'walk',t:'Walk'},{k:'med',t:'Meditate'}];
+  for(var i=0;i<keys.length;i++){
+    (function(kobj){
+      var btn = document.createElement('button'); btn.className='quick-btn';
+      btn.textContent = kobj.t + ' (' + (quick[kobj.k]||0) + ')';
+      btn.onclick = function(){ quick[kobj.k] = (quick[kobj.k]||0) + 1; lsSet('cyber_quick', quick); renderQuick(); };
+      box.appendChild(btn);
+    })(keys[i]);
+  }
+}
+function resetQuick(){ quick={water:0,walk:0,med:0}; lsSet('cyber_quick', quick); renderQuick(); }
+
 /* ---------- Pomodoro ---------- */
-var pom = { total:1500, remaining:1500, running:false, timer:null }; // seconds, 25*60
-function formatTime(s){
-  var mm = Math.floor(s/60); var ss = s%60;
-  if(mm < 10) mm = '0'+mm;
-  if(ss < 10) ss = '0'+ss;
-  return mm + ':' + ss;
-}
-function updatePomDisplay(){
-  $('pomTime').textContent = formatTime(pom.remaining);
-}
-function pomStart(){
-  if(pom.running) return;
-  pom.running = true;
-  pom.timer = setInterval(function(){
-    if(pom.remaining > 0){
-      pom.remaining -= 1; updatePomDisplay();
-    } else {
-      clearInterval(pom.timer); pom.running = false;
-      // simple alert sound fallback (vibrate not reliable)
-      try { window.alert('Pomodoro complete!'); } catch(e){}
-    }
-  }, 1000);
-}
-function pomPause(){
-  pom.running = false;
-  if(pom.timer) clearInterval(pom.timer);
-}
-function pomReset(){
-  pomPause(); pom.remaining = pom.total; updatePomDisplay();
-}
+var pom = lsGet('cyber_pom') || {total:1500,remaining:1500,running:false};
+var pomTimer = null;
+function updatePomDisplay(){ $('pomTime').textContent = formatTime(pom.remaining); lsSet('cyber_pom', pom); }
+function formatTime(s){ var mm = Math.floor(s/60); var ss = s%60; if(mm<10) mm='0'+mm; if(ss<10) ss='0'+ss; return mm+':'+ss; }
+function pomStart(){ if(pom.running) return; pom.running = true; pomTimer = setInterval(function(){ if(pom.remaining>0) { pom.remaining--; updatePomDisplay(); } else { pomStop(); try{ window.alert('Pomodoro complete'); }catch(e){} } }, 1000); lsSet('cyber_pom', pom); }
+function pomPause(){ pom.running = false; if(pomTimer) clearInterval(pomTimer); pomTimer = null; lsSet('cyber_pom', pom); }
+function pomStop(){ pom.running=false; if(pomTimer) clearInterval(pomTimer); pomTimer=null; }
+function pomReset(){ pomStop(); pom.remaining = pom.total; updatePomDisplay(); lsSet('cyber_pom', pom); }
 $('pomStart').addEventListener('click', pomStart, false);
 $('pomPause').addEventListener('click', pomPause, false);
 $('pomReset').addEventListener('click', pomReset, false);
 
-/* ---------- Settings buttons ---------- */
+/* ---------- Weather (Kharkiv) ---------- */
+function loadWeather(){
+  // lat 49.9935 N, lon 36.2304 E (Kharkiv). We'll use approx 50.0,36.2
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET','https://api.open-meteo.com/v1/forecast?latitude=50.0&longitude=36.2&current_weather=true');
+  xhr.timeout = 7000;
+  xhr.onload = function(){
+    if(xhr.status === 200){
+      try{
+        var d = JSON.parse(xhr.responseText);
+        var w = d.current_weather || {};
+        $('wTemp').textContent = (typeof w.temperature !== 'undefined' ? w.temperature + '°C' : '--°C');
+        $('wCond').textContent = 'Current';
+        $('wWind').textContent = (typeof w.windspeed !== 'undefined' ? w.windspeed + ' km/h' : '-- km/h');
+        // icon basic mapping
+        var icon = '☁';
+        if(w.weathercode !== undefined){
+          var code = w.weathercode;
+          if(code >= 80) icon='☔'; else if(code>=60) icon='⛅'; else if(code>=20) icon='🌤'; else icon='☀';
+        }
+        $('wIcon').textContent = icon;
+      }catch(e){ console.log('weather parse',e); }
+    }
+  };
+  xhr.ontimeout = function(){ console.log('weather timeout'); };
+  xhr.onerror = function(){ console.log('weather error'); };
+  try{ xhr.send(); }catch(e){}
+}
+
+/* ---------- Settings: intervals & reloads ---------- */
 $('int5').addEventListener('click', function(){ marketInterval = 5000; startMarketUpdates(); }, false);
 $('int15').addEventListener('click', function(){ marketInterval = 15000; startMarketUpdates(); }, false);
 $('int30').addEventListener('click', function(){ marketInterval = 30000; startMarketUpdates(); }, false);
 $('int0').addEventListener('click', function(){ marketInterval = 0; if(marketTimer) clearInterval(marketTimer); marketTimer = null; }, false);
-$('reloadAll').addEventListener('click', function(){ loadPricesXHR(); loadSparks(); loadQuote(); }, false);
+$('reloadAll').addEventListener('click', function(){ loadPricesXHR(); loadSparks(); loadQuote(); loadWeather(); }, false);
 
-/* ---------- Init ---------- */
-(function init(){
+/* ---------- 24/7 screen guard ---------- */
+$('guardToggle').addEventListener('change', function(){
+  var enabled = this.checked;
+  lsSet('screen_guard', enabled ? true : false);
+  var app = document.getElementById('app');
+  if(enabled){ app.className = app.className + ' screen-guard-active'; }
+  else { app.className = app.className.replace(' screen-guard-active',''); }
+});
+(function(){
+  var state = lsGet('screen_guard'); if(state){ $('guardToggle').checked = true; document.getElementById('app').className += ' screen-guard-active'; }
+})();
+
+/* ---------- init & start ---------- */
+function init(){
   // load persisted
   todos = lsGet('cyber_todos') || todos;
   vits = lsGet('cyber_vits') || vits;
   habits = lsGet('cyber_habits') || habits;
-  // render UI
+  quick = lsGet('cyber_quick') || quick;
+  pom = lsGet('cyber_pom') || pom;
+
+  // render
   renderTodos();
   renderVits();
   renderRings();
-  // market
+  renderQuick();
+  updatePomDisplay();
+
+  // markets
   loadPricesXHR();
   loadSparks();
   startMarketUpdates();
-  // quote
+
+  // quote & weather
   loadQuote();
+  loadWeather();
   setInterval(loadQuote, 60000);
-  // pom display
-  updatePomDisplay();
-})();
+  setInterval(loadWeather, 60000);
+}
+init();
+
+})(); // end IIFE
 </script>
+
 </body>
 </html>
