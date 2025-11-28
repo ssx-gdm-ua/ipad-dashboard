@@ -1,260 +1,468 @@
-<!-- Minimalist Dark Dashboard for Old iPad (iOS 10 Compatible) - Updated -->
-<!DOCTYPE html>
+<!doctype html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>iPad Dashboard</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <style>
-        body {
-            background:#0b0f12;
-            color:#e6eef6;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-            margin:0;padding:18px;
-        }
-        .wrap{max-width:900px;margin:0 auto;}
-        .section {margin-bottom:18px;padding:12px;background:#0f171a;border-radius:10px;box-shadow:0 4px 14px rgba(0,0,0,0.6)}
-        h2{margin:0 0 8px 0;font-size:18px}
-        .prices{font-size:14px;color:#9fb4c6}
-        img.chart{width:100%;height:110px;border-radius:8px;margin-top:8px;object-fit:cover}
-        .small{font-size:12px;color:#7f98a6}
-        .todo-list{margin-top:8px}
-        .todo-item{display:flex;align-items:center;margin:6px 0}
-        .todo-checkbox{width:20px;height:20px;margin-right:8px}
-        .todo-text{flex:1;padding:6px 8px;border-radius:6px;border:0;background:transparent;color:inherit;font-size:15px}
-        .todo-delete{margin-left:8px;background:#15202b;border-radius:6px;padding:6px 8px;color:#cfeefc;border:0}
-        .controls{display:flex;gap:8px;margin-top:8px}
-        button{background:#132029;color:#cfeefc;border:0;padding:8px 10px;border-radius:8px}
-        input[type=text]{padding:6px;border-radius:6px;border:0;background:#061216;color:inherit}
-        .vit-grid{display:flex;flex-direction:column;margin-top:8px}
-        .vit-item{display:flex;align-items:center;margin:6px 0}
-        .meta{font-size:12px;color:#6f8b98;margin-top:6px}
-        .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-        .time{font-size:20px;font-weight:600}
-    </style>
+<meta charset="utf-8">
+<title>Cyber Minimal Dashboard</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  /* Cyber minimal theme — compatible with older Safari */
+  html,body{height:100%;margin:0;padding:0;background:#040405;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:#cfeefc}
+  .container{max-width:980px;margin:14px auto;padding:14px}
+  .grid{display:flex;flex-wrap:wrap;gap:12px}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border-radius:14px;padding:12px;box-shadow:0 8px 30px rgba(0,0,0,0.8);border:1px solid rgba(125,211,252,0.06)}
+  .row{display:flex;align-items:center;justify-content:space-between}
+  .col-left{flex:1;margin-right:12px}
+  .muted{color:#5f7f8f;font-size:12px}
+  h1{font-size:18px;margin:0 0 6px 0;color:#9ee9ff}
+  .small{font-size:13px;color:#b7dbe6}
+  /* Top bar */
+  .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+  .brand{font-weight:700;letter-spacing:0.6px;color:#7ef0ff}
+  .time{font-weight:600;font-size:16px}
+  /* Layout specifics */
+  .leftCol{flex:1;min-width:300px}
+  .rightCol{width:320px;min-width:260px}
+  /* Crypto card */
+  .crypto-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px dashed rgba(125,211,252,0.04)}
+  .crypto-row:last-child{border-bottom:0}
+  .ticker{font-family:monospace;font-weight:700;color:#d8fbff}
+  .price{font-family:monospace;color:#e6ffe9}
+  img.spark{width:120px;height:48px;object-fit:cover;border-radius:6px;border:1px solid rgba(125,211,252,0.04)}
+  /* Quote */
+  .quote{font-size:15px;padding:8px 6px;border-radius:8px;background:rgba(126,240,255,0.02);border:1px solid rgba(126,240,255,0.03)}
+  /* Todo */
+  .todo-list{margin-top:8px}
+  .todo-item{display:flex;align-items:center;padding:8px;border-radius:8px;margin-bottom:6px;background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent)}
+  .todo-item input[type=text]{flex:1;border:0;background:transparent;color:inherit;padding:6px;font-size:14px;outline:none}
+  .todo-item button{background:none;border:0;color:#ff8b8b;padding:6px;font-size:14px}
+  .controls{display:flex;gap:8px;margin-top:8px}
+  input[type=text].small{padding:6px;border-radius:8px;border:0;background:#031316;color:inherit}
+  button.ghost{background:transparent;border:1px solid rgba(125,211,252,0.08);padding:8px;border-radius:8px;color:#7de0ff}
+  /* Vits */
+  .vit-item{display:flex;align-items:center;justify-content:space-between;padding:8px;border-radius:8px;margin:6px 0;background:rgba(255,255,255,0.01)}
+  .vit-item label{display:flex;align-items:center;gap:10px}
+  input[type=checkbox]{width:18px;height:18px}
+  /* Habit rings */
+  .rings{display:flex;align-items:center;gap:10px}
+  .ring-wrap{width:96px;height:96px;text-align:center}
+  .ring-label{font-size:12px;color:#9fd9e8;margin-top:6px}
+  /* Pomodoro */
+  .pomodoro{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px}
+  .pom-time{font-size:28px;font-weight:700;color:#bff8ff}
+  .pom-controls{display:flex;gap:8px;margin-top:10px}
+  /* footer small */
+  .tiny{font-size:11px;color:#4a6e79;margin-top:8px}
+  /* responsive */
+  @media(max-width:860px){ .grid{flex-direction:column} .rightCol{width:100%} }
+</style>
 </head>
 <body>
-<div class="wrap">
-    <div class="topbar">
-        <div class="time" id="time">--:--</div>
-        <div class="small" id="lastUpdate">Last update: —</div>
-    </div>
+<div class="container">
+  <div class="top">
+    <div class="brand">CYBER DASH</div>
+    <div class="time" id="time">--:--</div>
+  </div>
 
-    <!-- Crypto Prices + Charts -->
-    <div class="section">
-        <h2>Crypto</h2>
-        <div class="prices" id="prices">Loading prices...</div>
-        <div style="margin-top:10px">
-            <div style="margin-bottom:6px"><strong class="small">BTC</strong></div>
-            <img class="chart" id="btcChart" alt="BTC chart" />
-            <div style="margin-top:8px"><strong class="small">ETH</strong></div>
-            <img class="chart" id="ethChart" alt="ETH chart" />
-            <div style="margin-top:8px"><strong class="small">SOL</strong></div>
-            <img class="chart" id="solChart" alt="SOL chart" />
+  <div class="grid">
+    <!-- Left column -->
+    <div class="leftCol">
+      <!-- CRYPTO CARD -->
+      <div class="card">
+        <h1>MARKETS</h1>
+        <div class="muted">Live prices & mini spark</div>
+        <div id="cryptoRows" style="margin-top:10px">
+          <!-- rows injected by JS -->
         </div>
-    </div>
+        <div class="tiny">Источник цен: Coinlore · Спарклайны: CoinGecko</div>
+      </div>
 
-    <!-- Quote -->
-    <div class="section">
-        <h2>Quote of the Day</h2>
-        <div id="quote" style="font-size:16px;line-height:1.4">Loading quote...</div>
-        <div class="meta">Tap quote to change. If online quote fails — local fallback used.</div>
-    </div>
-
-    <!-- Todo List -->
-    <div class="section">
-        <h2>To-Do</h2>
-        <div class="todo-list" id="todoList"></div>
-        <div class="controls">
-            <input type="text" id="newTodo" placeholder="New task" />
-            <button id="addBtn">Add</button>
-            <button id="clearDone">Clear done</button>
+      <!-- QUOTE + TODO -->
+      <div style="display:flex;gap:12px;margin-top:12px;flex-wrap:wrap">
+        <div style="flex:1;min-width:260px" class="card">
+          <h1>QUOTE</h1>
+          <div class="quote" id="quote">Loading...</div>
+          <div class="tiny">Tap the quote to fetch another.</div>
         </div>
-        <div class="meta">Tip: tap text to edit; keyboard will stay (fixed).</div>
+
+        <div style="flex:1;min-width:260px" class="card">
+          <h1>TO-DO</h1>
+          <div class="todo-list" id="todoList"></div>
+          <div class="controls">
+            <input id="newTodo" class="small" type="text" placeholder="Add task and press Enter">
+            <button id="addTodo" class="ghost">Add</button>
+            <button id="clearDone" class="ghost">Clear done</button>
+          </div>
+          <div class="tiny">Click text to edit — keyboard stays.</div>
+        </div>
+      </div>
+
+      <!-- Pomodoro -->
+      <div class="card" style="margin-top:12px">
+        <h1>POMODORO</h1>
+        <div class="pomodoro">
+          <div id="pomTime" class="pom-time">25:00</div>
+          <div class="pom-controls">
+            <button id="pomStart" class="ghost">Start</button>
+            <button id="pomPause" class="ghost">Pause</button>
+            <button id="pomReset" class="ghost">Reset</button>
+          </div>
+          <div class="tiny">Work interval: 25:00 · Breaks manual</div>
+        </div>
+      </div>
     </div>
 
-    <!-- Vitamins / Pills Tracker -->
-    <div class="section">
-        <h2>Vitamins / Habits</h2>
-        <div class="vit-grid" id="vitGrid"></div>
+    <!-- Right column -->
+    <div class="rightCol">
+      <div class="card">
+        <h1>HABIT RINGS</h1>
+        <div class="muted">Tap ring to toggle progress for today</div>
+        <div class="rings" style="margin-top:10px" id="ringsContainer">
+          <!-- canvas rings -->
+        </div>
+        <div class="tiny">Rings store simple completion (0 or 1) — visual minimal rings.</div>
+      </div>
+
+      <div class="card" style="margin-top:12px">
+        <h1>VITAMINS</h1>
+        <div class="muted">Quick check for pills</div>
+        <div id="vitList" style="margin-top:8px"></div>
         <div class="controls" style="margin-top:8px">
-            <input type="text" id="newVit" placeholder="Add vitamin / habit" />
-            <button id="addVit">Add</button>
+          <input id="newVit" class="small" type="text" placeholder="Add vitamin">
+          <button id="addVit" class="ghost">Add</button>
         </div>
+      </div>
+
+      <div class="card" style="margin-top:12px">
+        <h1>SETTINGS</h1>
+        <div class="muted">Update intervals & quick actions</div>
+        <div style="margin-top:8px">
+          <div class="small">Refresh interval</div>
+          <div style="display:flex;gap:8px;margin-top:6px">
+            <button class="ghost" id="int5">5s</button>
+            <button class="ghost" id="int15">15s</button>
+            <button class="ghost" id="int30">30s</button>
+            <button class="ghost" id="int0">Stop</button>
+          </div>
+        </div>
+        <div style="margin-top:10px">
+          <button id="reloadAll" class="ghost">Reload now</button>
+        </div>
+        <div class="tiny">Tip: set iPad to never sleep and add to Home Screen for app-like feel.</div>
+      </div>
     </div>
+  </div>
 </div>
 
 <script>
-/** ES5-compatible code for old iPad (iOS10) **/
+/* Cyber Minimal Dashboard — ES5, old Safari friendly */
 
-// --- Time ---
-function updateTime(){
-    var now = new Date();
-    var hh = now.getHours(); if(hh<10) hh='0'+hh;
-    var mm = now.getMinutes(); if(mm<10) mm='0'+mm;
-    document.getElementById('time').textContent = hh+':'+mm;
+/* ---------- Utilities ---------- */
+function $(id){ return document.getElementById(id); }
+function lsGet(k){ try{ return JSON.parse(localStorage.getItem(k)||'null'); }catch(e){return null;} }
+function lsSet(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+function nowISO(){ return (new Date()).toISOString(); }
+
+/* ---------- Time ---------- */
+function updateClock(){
+  var d = new Date();
+  var hh = d.getHours(); if(hh < 10) hh = '0'+hh;
+  var mm = d.getMinutes(); if(mm < 10) mm = '0'+mm;
+  $('time').textContent = hh + ':' + mm;
 }
-setInterval(updateTime,1000); updateTime();
+setInterval(updateClock,1000);
+updateClock();
 
-// --- Helpers ---
-function ls(key, val){
-    if(arguments.length===2){
-        try{ localStorage.setItem(key, JSON.stringify(val)); }catch(e){}
-    } else {
-        try{ return JSON.parse(localStorage.getItem(key)||'null'); }catch(e){return null;}
-    }
+/* ---------- Crypto prices & sparks ---------- */
+var marketInterval = 15000; // default ms
+var marketTimer = null;
+var coins = [
+  {id:'bitcoin', name:'BTC', cgId:1, coLName:'Bitcoin'},
+  {id:'ethereum', name:'ETH', cgId:279, coLName:'Ethereum'},
+  {id:'solana', name:'SOL', cgId:5426, coLName:'Solana'}
+];
+
+function buildCryptoRows(){
+  var container = document.createElement('div');
+  for(var i=0;i<coins.length;i++){
+    var c = coins[i];
+    var row = document.createElement('div'); row.className='crypto-row';
+    var left = document.createElement('div'); left.style.display='flex'; left.style.alignItems='center'; left.style.gap='10px';
+    var tick = document.createElement('div'); tick.className='ticker'; tick.textContent = c.name;
+    var lbl = document.createElement('div'); lbl.className='small'; lbl.textContent = c.coLName;
+    left.appendChild(tick); left.appendChild(lbl);
+    var right = document.createElement('div'); right.style.display='flex'; right.style.alignItems='center'; right.style.gap='10px';
+    var price = document.createElement('div'); price.className='price'; price.id = 'price_'+c.name;
+    var spark = document.createElement('img'); spark.className='spark'; spark.id = 'spark_'+c.name; spark.src = ''; spark.alt = 'spark';
+    right.appendChild(price); right.appendChild(spark);
+    row.appendChild(left); row.appendChild(right);
+    container.appendChild(row);
+  }
+  $('cryptoRows').appendChild(container);
 }
+buildCryptoRows();
 
-// --- Prices via coinlore (simple XHR) ---
-function loadPrices(){
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET','https://api.coinlore.net/api/tickers/?start=0&limit=10');
-    xhr.timeout = 7000;
-    xhr.onload = function(){
-        if(xhr.status===200){
-            try{
-                var data = JSON.parse(xhr.responseText).data;
-                var btc = findCoin(data,'Bitcoin');
-                var eth = findCoin(data,'Ethereum');
-                var sol = findCoin(data,'Solana');
-                var out = 'BTC: $'+format(btc.price_usd)+'  ▲'+btc.percent_change_24h+'%<br>'+
-                          'ETH: $'+format(eth.price_usd)+'  ▲'+eth.percent_change_24h+'%<br>'+
-                          'SOL: $'+format(sol.price_usd)+'  ▲'+sol.percent_change_24h+'%';
-                document.getElementById('prices').innerHTML = out;
-                document.getElementById('lastUpdate').textContent = 'Last update: '+(new Date()).toLocaleTimeString();
-            }catch(e){console.log(e);}    
+function loadPricesXHR(){
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET','https://api.coinlore.net/api/tickers/?start=0&limit=10');
+  xhr.timeout = 7000;
+  xhr.onload = function(){
+    if(xhr.status === 200){
+      try{
+        var resp = JSON.parse(xhr.responseText);
+        var list = resp.data || [];
+        for(var i=0;i<coins.length;i++){
+          var c = coins[i];
+          // find by name
+          var found = null;
+          for(var j=0;j<list.length;j++){ if(list[j].name === c.coLName){ found = list[j]; break; } }
+          var priceEl = $('price_'+c.name);
+          if(found && priceEl){
+            priceEl.textContent = '$' + parseFloat(found.price_usd).toFixed(2) + ' (' + found.percent_change_24h + '%)';
+          } else if(priceEl){
+            priceEl.textContent = '—';
+          }
         }
-    };
-    xhr.ontimeout = function(){ console.log('prices timeout'); };
-    xhr.onerror = function(){ console.log('prices err'); };
-    xhr.send();
-}
-function findCoin(list,name){ for(var i=0;i<list.length;i++){ if(list[i].name===name) return list[i]; } return {price_usd:0,percent_change_24h:0}; }
-function format(v){ var n = parseFloat(v); if(isNaN(n)) return '—'; return n.toFixed(2); }
-
-// --- Charts as SVG images from CoinGecko (cache-busted) ---
-function loadCharts(){
-    var ts = Date.now();
-    // note: some older Safari may not allow direct svg from coingecko due to CORS when embedded as <img>. If that happens, images will still show as broken icon; we provide fallback to simple text.
-    document.getElementById('btcChart').src = 'https://www.coingecko.com/coins/1/sparkline.svg?'+ts;
-    document.getElementById('ethChart').src = 'https://www.coingecko.com/coins/279/sparkline.svg?'+ts;
-    document.getElementById('solChart').src = 'https://www.coingecko.com/coins/5426/sparkline.svg?'+ts; // solana id variant
+        // last update
+        var lu = new Date(); if(document.getElementById('lastUpdate')) document.getElementById('lastUpdate').textContent = 'Updated: ' + lu.toLocaleTimeString();
+      }catch(e){ console.log('parse price err',e); }
+    }
+  };
+  xhr.ontimeout = function(){ console.log('price timeout'); };
+  xhr.onerror = function(){ console.log('price err'); };
+  xhr.send();
 }
 
-// --- Quote with fallback ---
+function loadSparks(){
+  var ts = Date.now();
+  for(var i=0;i<coins.length;i++){
+    try{
+      var img = $('spark_'+coins[i].name);
+      // coinGecko sparkline svg url (cache-bust)
+      img.src = 'https://www.coingecko.com/coins/' + coins[i].cgId + '/sparkline.svg?' + ts;
+      // fallback: if image fails, a broken image will show — still safe
+    }catch(e){}
+  }
+}
+
+function startMarketUpdates(){
+  if(marketTimer) clearInterval(marketTimer);
+  if(marketInterval>0) marketTimer = setInterval(function(){ loadPricesXHR(); loadSparks(); }, marketInterval);
+}
+
+/* ---------- Quote ---------- */
 var localQuotes = [
-    'Действие — мост между мечтой и результатом.',
-    'Маленький прогресс каждый день приводит к большим результатам.',
-    'Не жди — создавай возможности.',
-    'Консистентность важнее мотивации.',
-    'Ошибки — это информация, не приговор.'
+  'Действие — мост между мечтой и результатом.',
+  'Маленький прогресс каждый день приводит к большим результатам.',
+  'Не жди — создавай возможности.',
+  'Консистентность важнее мотивации.',
+  'Ошибки — это информация, не приговор.'
 ];
 function loadQuote(){
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET','https://api.quotable.io/random');
-    xhr.timeout = 5000;
-    xhr.onload = function(){
-        if(xhr.status===200){
-            try{ var q = JSON.parse(xhr.responseText); document.getElementById('quote').textContent = q.content; }
-            catch(e){ document.getElementById('quote').textContent = localQuotes[Math.floor(Math.random()*localQuotes.length)]; }
-        } else {
-            document.getElementById('quote').textContent = localQuotes[Math.floor(Math.random()*localQuotes.length)];
-        }
-    };
-    xhr.ontimeout = function(){ document.getElementById('quote').textContent = localQuotes[Math.floor(Math.random()*localQuotes.length)]; };
-    xhr.onerror = function(){ document.getElementById('quote').textContent = localQuotes[Math.floor(Math.random()*localQuotes.length)]; };
-    try { xhr.send(); } catch(e){ document.getElementById('quote').textContent = localQuotes[Math.floor(Math.random()*localQuotes.length)]; }
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET','https://api.quotable.io/random');
+  xhr.timeout = 5000;
+  xhr.onload = function(){ 
+    if(xhr.status === 200){
+      try{ var q = JSON.parse(xhr.responseText); $('quote').textContent = q.content; }
+      catch(e){ $('quote').textContent = localQuotes[Math.floor(Math.random()*localQuotes.length)]; }
+    } else { $('quote').textContent = localQuotes[Math.floor(Math.random()*localQuotes.length)]; }
+  };
+  xhr.ontimeout = function(){ $('quote').textContent = localQuotes[Math.floor(Math.random()*localQuotes.length)]; };
+  xhr.onerror = function(){ $('quote').textContent = localQuotes[Math.floor(Math.random()*localQuotes.length)]; };
+  try{ xhr.send(); }catch(e){ $('quote').textContent = localQuotes[Math.floor(Math.random()*localQuotes.length)]; }
 }
+document.addEventListener('click', function(e){ if(e.target && e.target.id==='quote') loadQuote(); }, false);
 
-// allow tapping quote to change
-document.addEventListener('click', function(e){
-    if(e.target && e.target.id==='quote'){ loadQuote(); }
-}, false);
-
-// --- Todos: do not re-render whole list to avoid keyboard dismissal ---
-var todos = ls('todos') || [];
-function renderAllTodos(){
-    var container = document.getElementById('todoList');
-    container.innerHTML = '';
-    for(var i=0;i<todos.length;i++){ container.appendChild(createTodoElement(todos[i])); }
+/* ---------- ToDo (no full re-render to avoid keyboard issue) ---------- */
+var todos = lsGet('cyber_todos') || [];
+function renderTodos(){
+  var list = $('todoList'); list.innerHTML = '';
+  for(var i=0;i<todos.length;i++){
+    list.appendChild(makeTodoElement(todos[i]));
+  }
 }
-function createTodoElement(item){
-    var wrap = document.createElement('div'); wrap.className = 'todo-item'; wrap.setAttribute('data-id', item.id);
-    var cb = document.createElement('input'); cb.type='checkbox'; cb.className='todo-checkbox'; cb.checked = !!item.done;
-    cb.onchange = function(){ item.done = cb.checked; saveTodos(); };
-    var txt = document.createElement('input'); txt.type='text'; txt.className='todo-text'; txt.value = item.text;
-    // keep focus: do not recreate element on input, just update model
-    txt.oninput = function(){ item.text = this.value; saveTodos(); };
-    txt.onfocus = function(){ /* keep keyboard */ };
-    var del = document.createElement('button'); del.className='todo-delete'; del.textContent='✕';
-    del.onclick = function(){ removeTodoById(item.id); };
-    wrap.appendChild(cb); wrap.appendChild(txt); wrap.appendChild(del);
-    return wrap;
+function makeTodoElement(item){
+  var wrap = document.createElement('div'); wrap.className='todo-item'; wrap.setAttribute('data-id', item.id);
+  var cb = document.createElement('input'); cb.type='checkbox'; cb.checked = !!item.done;
+  cb.onchange = (function(it){ return function(){ it.done = this.checked; saveTodos(); }; })(item);
+  var txt = document.createElement('input'); txt.type='text'; txt.value = item.text; txt.oninput = (function(it){ return function(){ it.text = this.value; saveTodos(); }; })(item);
+  var del = document.createElement('button'); del.textContent='✕'; del.onclick = (function(id){ return function(){ removeTodo(id); }; })(item.id);
+  wrap.appendChild(cb); wrap.appendChild(txt); wrap.appendChild(del);
+  return wrap;
 }
-function addNewTodo(text){
-    var obj = { id: 't'+(new Date()).getTime(), text: text || 'New task', done:false };
-    todos.unshift(obj);
-    ls('todos', todos);
-    var list = document.getElementById('todoList');
-    list.insertBefore(createTodoElement(obj), list.firstChild);
+function addTodoText(t){
+  var id = 'td'+(new Date()).getTime();
+  todos.unshift({id:id,text:t,done:false});
+  lsSet('cyber_todos', todos);
+  var el = makeTodoElement(todos[0]);
+  var list = $('todoList'); list.insertBefore(el, list.firstChild);
 }
-function removeTodoById(id){
-    for(var i=0;i<todos.length;i++){ if(todos[i].id === id){ todos.splice(i,1); break; } }
-    ls('todos', todos);
-    var el = document.querySelector('[data-id="'+id+'"]'); if(el && el.parentNode) el.parentNode.removeChild(el);
+function removeTodo(id){
+  for(var i=0;i<todos.length;i++){ if(todos[i].id === id){ todos.splice(i,1); break; } }
+  lsSet('cyber_todos', todos);
+  var el = document.querySelector('[data-id="'+id+'"]'); if(el && el.parentNode) el.parentNode.removeChild(el);
 }
-function saveTodos(){ ls('todos', todos); }
+function saveTodos(){ lsSet('cyber_todos', todos); }
+$('addTodo').addEventListener('click', function(){ var v=$('newTodo').value.replace(/^\s+|\s+$/g,''); if(v){ addTodoText(v); $('newTodo').value=''; } }, false);
+$('newTodo').addEventListener('keypress', function(e){ if(e.key === 'Enter' || e.keyCode === 13){ $('addTodo').click(); } }, false);
+$('clearDone').addEventListener('click', function(){ var left=[]; for(var i=0;i<todos.length;i++){ if(!todos[i].done) left.push(todos[i]); } todos=left; lsSet('cyber_todos', todos); renderTodos(); }, false);
 
-// init todo controls
-document.getElementById('addBtn').onclick = function(){
-    var v = document.getElementById('newTodo').value.replace(/^\s+|\s+$/g,'');
-    if(v.length===0) return; addNewTodo(v); document.getElementById('newTodo').value='';
-};
-// add on enter
-document.getElementById('newTodo').addEventListener('keypress', function(e){ if(e.key==='Enter' || e.keyCode===13){ document.getElementById('addBtn').click(); } }, false);
-
-document.getElementById('clearDone').onclick = function(){
-    var leftover = [];
-    for(var i=0;i<todos.length;i++){ if(!todos[i].done) leftover.push(todos[i]); }
-    todos = leftover; ls('todos', todos); renderAllTodos();
-};
-
-// --- Vitamins / habits (store objects with id) ---
-var vits = ls('vits') || [ {id:'v1',name:'Утро',on:false}, {id:'v2',name:'День',on:false}, {id:'v3',name:'Вечер',on:false} ];
+/* ---------- Vitamins ---------- */
+var vits = lsGet('cyber_vits') || [ {id:'v1',name:'Vitamin D',on:false}, {id:'v2',name:'Magnesium',on:false} ];
 function renderVits(){
-    var box = document.getElementById('vitGrid'); box.innerHTML = '';
-    for(var i=0;i<vits.length;i++){
-        var it = vits[i];
-        var wr = document.createElement('div'); wr.className='vit-item'; wr.setAttribute('data-id', it.id);
-        var cb = document.createElement('input'); cb.type='checkbox'; cb.checked = !!it.on;
-        cb.onchange = (function(idx){ return function(){ vits[idx].on = this.checked; ls('vits', vits); }; })(i);
-        var lbl = document.createElement('div'); lbl.style.marginLeft='8px'; lbl.textContent = it.name;
-        var del = document.createElement('button'); del.style.marginLeft='8px'; del.textContent='✕'; del.onclick = (function(id){ return function(){ removeVit(id); }; })(it.id);
-        wr.appendChild(cb); wr.appendChild(lbl); wr.appendChild(del);
-        box.appendChild(wr);
-    }
+  var box = $('vitList'); box.innerHTML = '';
+  for(var i=0;i<vits.length;i++){
+    var it = vits[i];
+    var wr = document.createElement('div'); wr.className='vit-item';
+    var left = document.createElement('label');
+    var cb = document.createElement('input'); cb.type='checkbox'; cb.checked = !!it.on;
+    (function(idx,elem){ cb.onchange = function(){ vits[idx].on = this.checked; lsSet('cyber_vits', vits); }; })(i,cb);
+    var span = document.createElement('div'); span.textContent = it.name; span.style.marginLeft='8px';
+    left.appendChild(cb); left.appendChild(span);
+    var del = document.createElement('button'); del.textContent='✕'; del.onclick = (function(id){ return function(){ removeVit(id); }; })(it.id);
+    wr.appendChild(left); wr.appendChild(del);
+    box.appendChild(wr);
+  }
 }
-function addVit(name){ if(!name) return; vits.push({id:'v'+(new Date()).getTime(),name:name,on:false}); ls('vits', vits); renderVits(); }
-function removeVit(id){ for(var i=0;i<vits.length;i++){ if(vits[i].id===id){ vits.splice(i,1); break; } } ls('vits', vits); renderVits(); }
+function addVit(name){
+  if(!name) return;
+  var id = 'vit'+(new Date()).getTime();
+  vits.push({id:id,name:name,on:false});
+  lsSet('cyber_vits', vits);
+  renderVits();
+}
+function removeVit(id){
+  for(var i=0;i<vits.length;i++){ if(vits[i].id === id){ vits.splice(i,1); break; } }
+  lsSet('cyber_vits', vits); renderVits();
+}
+$('addVit').addEventListener('click', function(){ var v=$('newVit').value.replace(/^\s+|\s+$/g,''); if(v){ addVit(v); $('newVit').value=''; } }, false);
+$('newVit').addEventListener('keypress', function(e){ if(e.key === 'Enter' || e.keyCode === 13){ $('addVit').click(); } }, false);
 
-document.getElementById('addVit').onclick = function(){ var v=document.getElementById('newVit').value.replace(/^\s+|\s+$/g,''); if(!v) return; addVit(v); document.getElementById('newVit').value=''; };
-// enter key for vit
-document.getElementById('newVit').addEventListener('keypress', function(e){ if(e.key==='Enter' || e.keyCode===13){ document.getElementById('addVit').click(); } }, false);
+/* ---------- Habit Rings ---------- */
+/* simple rings: each habit is 0/1 for today; draw arcs on canvas */
+var habits = lsGet('cyber_habits') || [
+  {id:'h1',name:'Move',val:0, color:'#66ffcc'},
+  {id:'h2',name:'Focus',val:0, color:'#7ef0ff'},
+  {id:'h3',name:'Read',val:0, color:'#b78bff'}
+];
 
-// --- Init ---
+function drawRingCanvas(canvas, percentage, strokeColor, bgColor){
+  try{
+    var ctx = canvas.getContext('2d');
+    var w = canvas.width; var h = canvas.height;
+    ctx.clearRect(0,0,w,h);
+    var cx = w/2; var cy = h/2; var r = Math.min(w,h)/2 - 8;
+    // background track
+    ctx.beginPath();
+    ctx.arc(cx,cy,r,0,Math.PI*2,false);
+    ctx.strokeStyle = bgColor || 'rgba(255,255,255,0.06)';
+    ctx.lineWidth = 8;
+    ctx.stroke();
+    // progress arc
+    var start = -Math.PI/2;
+    var end = start + (Math.PI*2) * (percentage||0);
+    ctx.beginPath();
+    ctx.arc(cx,cy,r,start,end,false);
+    ctx.strokeStyle = strokeColor || '#7ef0ff';
+    ctx.lineWidth = 8;
+    ctx.lineCap = 'round';
+    ctx.stroke();
+    // center text
+    ctx.fillStyle = '#cfeefc';
+    ctx.font = '14px monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    var pct = Math.round((percentage||0)*100) + '%';
+    ctx.fillText(pct, cx, cy);
+  }catch(e){ console.log('draw err',e); }
+}
+
+function renderRings(){
+  var cont = $('ringsContainer'); cont.innerHTML = '';
+  for(var i=0;i<habits.length;i++){
+    (function(it,idx){
+      var wrap = document.createElement('div'); wrap.className='ring-wrap';
+      var cnv = document.createElement('canvas'); cnv.width = 96; cnv.height = 96; cnv.style.borderRadius='10px';
+      cnv.style.cursor='pointer';
+      cnv.onclick = function(){ toggleHabit(it.id); };
+      wrap.appendChild(cnv);
+      var lbl = document.createElement('div'); lbl.className='ring-label'; lbl.textContent = it.name;
+      wrap.appendChild(lbl);
+      cont.appendChild(wrap);
+      drawRingCanvas(cnv, it.val?1:0, it.color, 'rgba(255,255,255,0.04)');
+    })(habits[i], i);
+  }
+}
+
+function toggleHabit(id){
+  for(var i=0;i<habits.length;i++){
+    if(habits[i].id === id){ habits[i].val = habits[i].val ? 0 : 1; break; }
+  }
+  lsSet('cyber_habits', habits); renderRings();
+}
+
+/* ---------- Pomodoro ---------- */
+var pom = { total:1500, remaining:1500, running:false, timer:null }; // seconds, 25*60
+function formatTime(s){
+  var mm = Math.floor(s/60); var ss = s%60;
+  if(mm < 10) mm = '0'+mm;
+  if(ss < 10) ss = '0'+ss;
+  return mm + ':' + ss;
+}
+function updatePomDisplay(){
+  $('pomTime').textContent = formatTime(pom.remaining);
+}
+function pomStart(){
+  if(pom.running) return;
+  pom.running = true;
+  pom.timer = setInterval(function(){
+    if(pom.remaining > 0){
+      pom.remaining -= 1; updatePomDisplay();
+    } else {
+      clearInterval(pom.timer); pom.running = false;
+      // simple alert sound fallback (vibrate not reliable)
+      try { window.alert('Pomodoro complete!'); } catch(e){}
+    }
+  }, 1000);
+}
+function pomPause(){
+  pom.running = false;
+  if(pom.timer) clearInterval(pom.timer);
+}
+function pomReset(){
+  pomPause(); pom.remaining = pom.total; updatePomDisplay();
+}
+$('pomStart').addEventListener('click', pomStart, false);
+$('pomPause').addEventListener('click', pomPause, false);
+$('pomReset').addEventListener('click', pomReset, false);
+
+/* ---------- Settings buttons ---------- */
+$('int5').addEventListener('click', function(){ marketInterval = 5000; startMarketUpdates(); }, false);
+$('int15').addEventListener('click', function(){ marketInterval = 15000; startMarketUpdates(); }, false);
+$('int30').addEventListener('click', function(){ marketInterval = 30000; startMarketUpdates(); }, false);
+$('int0').addEventListener('click', function(){ marketInterval = 0; if(marketTimer) clearInterval(marketTimer); marketTimer = null; }, false);
+$('reloadAll').addEventListener('click', function(){ loadPricesXHR(); loadSparks(); loadQuote(); }, false);
+
+/* ---------- Init ---------- */
 (function init(){
-    // render existing data
-    if(todos && todos.length) renderAllTodos();
-    else todos = todos || [];
-    if(vits && vits.length) renderVits();
-    ls('todos', todos); ls('vits', vits);
-
-    loadPrices(); loadCharts(); loadQuote();
-    setInterval(loadPrices,15000);
-    setInterval(loadCharts,15000);
-    setInterval(loadQuote,60000);
+  // load persisted
+  todos = lsGet('cyber_todos') || todos;
+  vits = lsGet('cyber_vits') || vits;
+  habits = lsGet('cyber_habits') || habits;
+  // render UI
+  renderTodos();
+  renderVits();
+  renderRings();
+  // market
+  loadPricesXHR();
+  loadSparks();
+  startMarketUpdates();
+  // quote
+  loadQuote();
+  setInterval(loadQuote, 60000);
+  // pom display
+  updatePomDisplay();
 })();
-
 </script>
 </body>
 </html>
